@@ -1,6 +1,8 @@
 package com.pain.yellow.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pain.yellow.security.filter.RestAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -15,26 +17,37 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @EnableWebSecurity(debug = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final ObjectMapper objectMapper;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests(req -> req.anyRequest().authenticated())
-                .formLogin(form -> form.loginPage("/login")
-                        .defaultSuccessUrl("/")
-                        .successHandler(authenticationSuccessHandler())
-                        .failureHandler(authenticationFailureHandler())
-                        .permitAll())
-                .httpBasic(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
-                .rememberMe(remember -> remember.tokenValiditySeconds(60 * 3).rememberMeCookieName("remember-me"))
-                .logout(logout -> logout.logoutUrl("/perform_logout"));
+//        http
+//                .authorizeRequests(req -> req.anyRequest().authenticated())
+//                .formLogin(form -> form.loginPage("/login")
+//                        .defaultSuccessUrl("/")
+//                        .successHandler(authenticationSuccessHandler())
+//                        .failureHandler(authenticationFailureHandler())
+//                        .permitAll())
+//                .httpBasic(Customizer.withDefaults())
+//                .csrf(csrf -> csrf.disable())
+//                .rememberMe(remember -> remember.tokenValiditySeconds(60 * 3).rememberMeCookieName("remember-me"))
+//                .logout(logout -> logout.logoutUrl("/perform_logout"));
+
+        http.authorizeRequests(req -> req
+                .antMatchers("/authorize/**").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated())
+                .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .csrf(csrf -> csrf.ignoringAntMatchers("/authorize/**", "/admin/**"));
     }
 
     @Override
@@ -56,6 +69,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private RestAuthenticationFilter restAuthenticationFilter() throws Exception {
+        RestAuthenticationFilter restAuthenticationFilter = new RestAuthenticationFilter(objectMapper);
+        restAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
+        restAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
+        restAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        restAuthenticationFilter.setFilterProcessesUrl("/authorize/login");
+        return restAuthenticationFilter;
     }
 
     private AuthenticationSuccessHandler authenticationSuccessHandler() {
