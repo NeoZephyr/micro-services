@@ -5,7 +5,9 @@ import com.pain.yellow.security.filter.RestAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
@@ -28,6 +31,8 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = true)
+@Configuration
+@Order(99)
 @Import(SecurityProblemSupport.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -36,19 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests(req -> req.anyRequest().authenticated())
-//                .formLogin(form -> form.loginPage("/login")
-//                        .defaultSuccessUrl("/")
-//                        .successHandler(authenticationSuccessHandler())
-//                        .failureHandler(authenticationFailureHandler())
-//                        .permitAll())
-//                .httpBasic(Customizer.withDefaults())
-//                .csrf(csrf -> csrf.disable())
-//                .rememberMe(remember -> remember.tokenValiditySeconds(60 * 3).rememberMeCookieName("remember-me"))
-//                .logout(logout -> logout.logoutUrl("/perform_logout"));
-
         http
+                .requestMatchers(req -> req.mvcMatchers("/admin/**", "/authorize/**"))
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exp -> exp
                         .authenticationEntryPoint(securityProblemSupport)
                         .accessDeniedHandler(securityProblemSupport))
@@ -57,14 +52,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .csrf(csrf -> csrf.ignoringAntMatchers("/authorize/**", "/admin/**", "/users/**"));
+                .csrf(csrf -> csrf.ignoringAntMatchers("/authorize/**", "/admin/**", "/users/**"))
+                .formLogin(form -> form.disable())
+                .httpBasic(httpBasic -> httpBasic.disable());
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
-                .ignoring().mvcMatchers("/public/**", "/error")
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+                .ignoring().mvcMatchers("/public/**", "/error/**");
     }
 
     @Override
