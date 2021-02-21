@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = MatchPasswordValidator.class)
 @Documented
 public @interface MatchPassword {
-    String message() default "Password Not Matched";
+    String message() default "{PasswordMatches.userDto}";;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

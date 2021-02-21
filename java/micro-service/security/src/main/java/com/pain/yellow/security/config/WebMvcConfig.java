@@ -1,14 +1,22 @@
 package com.pain.yellow.security.config;
 
+import lombok.RequiredArgsConstructor;
+import org.passay.MessageResolver;
+import org.passay.spring.SpringMessageResolver;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@RequiredArgsConstructor
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    private final MessageSource messageSource;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -25,5 +33,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/admin").setViewName("admin");
         registry.addViewController("/").setViewName("index");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    }
+
+    @Bean
+    public MessageResolver messageResolver() {
+        return new SpringMessageResolver(messageSource);
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean localValidatorFactoryBean() {
+        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+        localValidatorFactoryBean.setValidationMessageSource(messageSource);
+        return localValidatorFactoryBean;
     }
 }
