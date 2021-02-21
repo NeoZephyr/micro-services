@@ -5,6 +5,7 @@ import com.pain.yellow.security.filter.RestAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
@@ -20,15 +21,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = true)
+@Import(SecurityProblemSupport.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final ObjectMapper objectMapper;
+    private final SecurityProblemSupport securityProblemSupport;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -44,7 +48,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .rememberMe(remember -> remember.tokenValiditySeconds(60 * 3).rememberMeCookieName("remember-me"))
 //                .logout(logout -> logout.logoutUrl("/perform_logout"));
 
-        http.authorizeRequests(req -> req
+        http
+                .exceptionHandling(exp -> exp
+                        .authenticationEntryPoint(securityProblemSupport)
+                        .accessDeniedHandler(securityProblemSupport))
+                .authorizeRequests(req -> req
                 .antMatchers("/authorize/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
