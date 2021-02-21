@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .csrf(csrf -> csrf.ignoringAntMatchers("/authorize/**", "/admin/**"));
+                .csrf(csrf -> csrf.ignoringAntMatchers("/authorize/**", "/admin/**", "/users/**"));
     }
 
     @Override
