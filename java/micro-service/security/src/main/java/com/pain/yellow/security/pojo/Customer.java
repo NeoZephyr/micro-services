@@ -3,7 +3,7 @@ package com.pain.yellow.security.pojo;
 import lombok.Data;
 
 @Data
-public class User {
+public class Customer {
     String name;
     String gender;
 }

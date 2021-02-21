@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -68,7 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        String defaultId = "bcrypt";
+        Map<String, PasswordEncoder> map = new HashMap<>();
+        map.put(defaultId, new BCryptPasswordEncoder());
+        map.put("SHA-1", new MessageDigestPasswordEncoder("SHA-1"));
+        return new DelegatingPasswordEncoder(defaultId, map);
     }
 
     private RestAuthenticationFilter restAuthenticationFilter() throws Exception {
