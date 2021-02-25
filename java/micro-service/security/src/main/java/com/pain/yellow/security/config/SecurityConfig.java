@@ -2,6 +2,7 @@ package com.pain.yellow.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pain.yellow.security.filter.RestAuthenticationFilter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -42,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .requestMatchers(req -> req.mvcMatchers("/admin/**", "/authorize/**"))
+                .requestMatchers(req -> req.mvcMatchers("/users/**", "/admin/**", "/authorize/**"))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exp -> exp
                         .authenticationEntryPoint(securityProblemSupport)
@@ -52,15 +55,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .csrf(csrf -> csrf.ignoringAntMatchers("/authorize/**", "/admin/**", "/users/**"))
+                .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
-                .httpBasic(httpBasic -> httpBasic.disable());
+                .httpBasic(Customizer.withDefaults());
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
-                .ignoring().mvcMatchers("/public/**", "/error/**");
+                .ignoring()
+                .mvcMatchers("/public/**", "/error/**");
     }
 
     @Override
@@ -70,6 +74,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("user")
                 .password(passwordEncoder().encode("123456"))
                 .roles("USER", "ADMIN");
+    }
+
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean

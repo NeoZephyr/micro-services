@@ -19,8 +19,8 @@ public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
                         .failureUrl("/login?error")
                         .defaultSuccessUrl("/")
                         .permitAll())
-                .httpBasic(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .csrf(csrf -> csrf.ignoringAntMatchers("/authorize/**", "/admin/**", "/users/**"))
                 .rememberMe(remember -> remember.key("remember-me").tokenValiditySeconds(60 * 3).rememberMeCookieName("remember-me"))
                 .logout(logout -> logout.logoutUrl("/perform_logout").logoutSuccessUrl("/login"));
     }

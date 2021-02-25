@@ -26,3 +26,22 @@ Authorization: Basic user c8e2a704-1636-4111-816a-65121251ebe2
 ### FilterSecurityInterceptor
 
 过滤安全拦截器，用于授权逻辑
+
+## 核心组件
+
+### SecurityContext
+
+存储当前认证的用户的详细信息
+
+### SecurityContextHolder
+
+工具类，提供对安全上下文的访问
+
+### Authentication
+
+存储了当前用户的详细信息
+
+Principal 为用户的信息
+Credentials 为密码
+Authorities 为权限
+
