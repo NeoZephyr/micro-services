@@ -29,6 +29,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final ObjectMapper objectMapper;
     private final SecurityProblemSupport securityProblemSupport;
+    private final DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -64,16 +66,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .mvcMatchers("/public/**", "/error/**");
+                .mvcMatchers("/public/**", "/error/**", "/h2-console/**");
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .inMemoryAuthentication()
+                .jdbcAuthentication()
+                .withDefaultSchema()
+                .dataSource(dataSource)
                 .withUser("user")
                 .password(passwordEncoder().encode("123456"))
                 .roles("USER", "ADMIN");
+
+//        auth
+//                .inMemoryAuthentication()
+//                .withUser("user")
+//                .password(passwordEncoder().encode("123456"))
+//                .roles("USER", "ADMIN");
     }
 
     @Override
