@@ -45,3 +45,6 @@ Principal 为用户的信息
 Credentials 为密码
 Authorities 为权限
 
+
+JdbcUserDetailsManager
+JdbcDaoImpl

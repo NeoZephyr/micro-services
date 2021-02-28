@@ -11,7 +11,7 @@ server:
   error:
     whitelabel:
       enabled: true
-  port: 8080
+  port: ${SERVER_PORT:8080}
   servlet:
     encoding:
       charset: utf-8
@@ -45,6 +45,14 @@ spring:
         settings:
           trace: false
           web-allow-others: false
+    initialization-mode: embedded
+    jpa:
+      database: h2
+      database-platform: org.hibernate.dialect.H2Dialect
+      hibernate:
+        ddl-auto: create-drop
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
 #  security:
 #    user:
 #      name: user

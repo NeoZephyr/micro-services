@@ -2,6 +2,7 @@ package com.pain.yellow.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pain.yellow.security.filter.RestAuthenticationFilter;
+import com.pain.yellow.security.service.impl.UserService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -43,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final SecurityProblemSupport securityProblemSupport;
     private final DataSource dataSource;
+    private final UserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -71,13 +73,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
         auth
-                .jdbcAuthentication()
-                .withDefaultSchema()
-                .dataSource(dataSource)
-                .withUser("user")
-                .password(passwordEncoder().encode("123456"))
-                .roles("USER", "ADMIN");
+                .userDetailsService(userService)
+                .passwordEncoder(passwordEncoder());
+
+//        auth
+//                .jdbcAuthentication()
+//                .withDefaultSchema()
+//                .dataSource(dataSource)
+//                .withUser("user")
+//                .password(passwordEncoder().encode("123456"))
+//                .roles("USER", "ADMIN");
 
 //        auth
 //                .inMemoryAuthentication()
