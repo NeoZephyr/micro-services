@@ -45,6 +45,13 @@ Principal 为用户的信息
 Credentials 为密码
 Authorities 为权限
 
+## 认证过程
 
-JdbcUserDetailsManager
-JdbcDaoImpl
+1. AuthenticationFilter: 从请求中得到认证信息，如用户名、密码，构建 UsernamePasswordAuthenticationToken
+2. AuthenticationManager: 有一组 AuthenticationProvider，负责处理身份验证
+3. AuthenticationProvider: 对于不同的认证机制，会有不同的 Provider，AuthenticationProvider 认证过程中会调用
+4. UserDetailsService: 获取用户信息
+5. SecurityContext：放入认证之后的信息
+
+
+
