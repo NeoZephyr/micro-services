@@ -1,4 +1,4 @@
-package com.pain.yellow.security.pojo;
+package com.pain.yellow.security.domain;
 
 import lombok.Data;
 

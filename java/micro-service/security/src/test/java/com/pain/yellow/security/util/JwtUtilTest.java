@@ -1,8 +1,8 @@
 package com.pain.yellow.security.util;
 
 import com.pain.yellow.security.config.AuthProperties;
-import com.pain.yellow.security.pojo.Role;
-import com.pain.yellow.security.pojo.User;
+import com.pain.yellow.security.domain.Role;
+import com.pain.yellow.security.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;

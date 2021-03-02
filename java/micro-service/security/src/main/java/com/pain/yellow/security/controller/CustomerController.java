@@ -1,6 +1,6 @@
 package com.pain.yellow.security.controller;
 
-import com.pain.yellow.security.pojo.Customer;
+import com.pain.yellow.security.domain.Customer;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

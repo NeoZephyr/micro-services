@@ -1,6 +1,7 @@
 package com.pain.yellow.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pain.yellow.security.filter.JwtFilter;
 import com.pain.yellow.security.filter.RestAuthenticationFilter;
 import com.pain.yellow.security.service.impl.UserService;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityProblemSupport securityProblemSupport;
     private final DataSource dataSource;
     private final UserService userService;
+    private final JwtFilter jwtFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -56,9 +59,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .accessDeniedHandler(securityProblemSupport))
                 .authorizeRequests(req -> req
                 .antMatchers("/authorize/**").permitAll()
+                .antMatchers("/users/token").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .httpBasic(Customizer.withDefaults());
@@ -73,7 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
         auth
                 .userDetailsService(userService)
                 .passwordEncoder(passwordEncoder());

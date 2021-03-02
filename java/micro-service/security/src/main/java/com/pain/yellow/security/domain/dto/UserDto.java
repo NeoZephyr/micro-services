@@ -1,4 +1,4 @@
-package com.pain.yellow.security.dto;
+package com.pain.yellow.security.domain.dto;
 
 import com.pain.yellow.security.annotation.MatchPassword;
 import com.pain.yellow.security.annotation.ValidEmail;

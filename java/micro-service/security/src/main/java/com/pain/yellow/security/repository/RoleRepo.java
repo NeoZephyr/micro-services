@@ -1,6 +1,6 @@
 package com.pain.yellow.security.repository;
 
-import com.pain.yellow.security.pojo.Role;
+import com.pain.yellow.security.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
