@@ -3,10 +3,12 @@ package com.pain.yellow.security.domain.dto;
 import com.pain.yellow.security.annotation.MatchPassword;
 import com.pain.yellow.security.annotation.ValidEmail;
 import com.pain.yellow.security.annotation.ValidPassword;
+import com.pain.yellow.security.util.Constants;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -31,6 +33,10 @@ public class UserDto implements Serializable {
     @NotBlank
     @ValidEmail
     private String email;
+
+    @Pattern(regexp = Constants.PATTERN_MOBILE)
+    @NotNull
+    private String mobile;
 
     @NotNull
     @NotBlank

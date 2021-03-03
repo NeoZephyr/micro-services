@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests(req -> req
                 .antMatchers("/authorize/**").permitAll()
                 .antMatchers("/users/token").permitAll()
+                .antMatchers("/users/register").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
