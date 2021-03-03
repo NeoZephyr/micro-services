@@ -8,6 +8,7 @@ import com.pain.yellow.security.repository.RoleRepo;
 import com.pain.yellow.security.repository.UserRepo;
 import com.pain.yellow.security.util.Constants;
 import com.pain.yellow.security.util.JwtUtil;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {

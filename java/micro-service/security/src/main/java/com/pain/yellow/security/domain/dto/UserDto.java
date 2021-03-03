@@ -4,6 +4,7 @@ import com.pain.yellow.security.annotation.MatchPassword;
 import com.pain.yellow.security.annotation.ValidEmail;
 import com.pain.yellow.security.annotation.ValidPassword;
 import com.pain.yellow.security.util.Constants;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+@Builder
 @MatchPassword
 @Data
 public class UserDto implements Serializable {
