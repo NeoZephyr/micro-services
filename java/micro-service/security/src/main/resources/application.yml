@@ -62,3 +62,9 @@ auth:
   jwt:
     access-token-expire-time: 180000
     refresh-token-expire-time: 180000
+  sms-provider:
+    api-url: ${SMS_API_URL:sms}
+    name: ${SMS_PROVIDER_NAME:ali}
+  email-provider:
+    api-key: ${EMAIL_API_KEY:key}
+    name: api
