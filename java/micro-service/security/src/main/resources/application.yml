@@ -68,3 +68,6 @@ auth:
   email-provider:
     api-key: ${EMAIL_API_KEY:key}
     name: api
+  lean-cloud:
+    app-id: ${LEAN_CLOUD_APP_ID:id12345678}
+    app-key: ${LEAN_CLOUD_APP_KEY:key12345678}

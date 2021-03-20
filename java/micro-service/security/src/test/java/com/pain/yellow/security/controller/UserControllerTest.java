@@ -66,12 +66,6 @@ class UserControllerTest {
 
     private PasswordGenerator passwordGenerator;
 
-    @WithMockUser
-    @Test
-    public void test() throws Exception {
-        mockMvc.perform(get("/customers/greeting")).andExpect(status().isOk());
-    }
-
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders
@@ -102,6 +96,12 @@ class UserControllerTest {
                 .authorities(roles)
                 .build();
         userRepo.save(user);
+    }
+
+    @WithMockUser
+    @Test
+    public void test() throws Exception {
+        mockMvc.perform(get("/users/principal")).andExpect(status().isOk());
     }
 
     @Test

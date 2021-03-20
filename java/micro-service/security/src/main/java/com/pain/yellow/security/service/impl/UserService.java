@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
-@AllArgsConstructor
+// @AllArgsConstructor
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
 
     @Lazy
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private final JwtUtil jwtUtil;
 
