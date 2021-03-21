@@ -52,7 +52,7 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
             <optional>true</optional>
-            <version>1.18.8</version>
+            <version>1.18.10</version>
         </dependency>
 
         <dependency>
