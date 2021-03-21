@@ -21,6 +21,8 @@
     <modules>
         <module>security</module>
         <module>eureka-server</module>
+        <module>eureka-client-provider</module>
+        <module>eureka-client-consumer</module>
     </modules>
 
     <dependencyManagement>
