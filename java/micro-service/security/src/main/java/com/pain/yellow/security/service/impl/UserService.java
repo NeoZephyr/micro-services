@@ -64,6 +64,20 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new BadCredentialsException("username or password error"));
     }
 
+    public Auth login(UserDetails userDetails) {
+        return new Auth(jwtUtil.genAccessToken(userDetails), jwtUtil.genRefreshToken(userDetails));
+    }
+
+    public Auth loginWithTotp(User user) {
+        User toSave = user.withMfaKey(totpUtil.encodeKeyToString());
+        User saved = saveUser(toSave);
+        return login(saved);
+    }
+
+    public User saveUser(User user) {
+        return userRepo.save(user);
+    }
+
     @Transactional
     public User register(User user) {
         return roleRepo.findByAuthority(Constants.ROLE_USER).map(role -> {
@@ -87,5 +101,9 @@ public class UserService implements UserDetailsService {
 
     public boolean isMobileExisted(String mobile) {
         return userRepo.countByMobile(mobile) > 0;
+    }
+
+    public Optional<String> createTotp(User user) {
+        return totpUtil.genTotp(user.getMfaKey());
     }
 }
