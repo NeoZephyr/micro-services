@@ -11,11 +11,12 @@ import javax.annotation.PostConstruct;
 
 @RequiredArgsConstructor
 @Configuration
-public class LeanCloudConfig {
+public class LeanCloudSmsConfig {
 
     private final AuthProperties authProperties;
     private final Environment env;
 
+    // LeanCloud 短信
     @PostConstruct
     public void initialize() {
         if (env.acceptsProfiles(Profiles.of("prod"))) {

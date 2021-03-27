@@ -8,6 +8,7 @@ import com.pain.yellow.security.repository.RoleRepo;
 import com.pain.yellow.security.repository.UserRepo;
 import com.pain.yellow.security.util.Constants;
 import com.pain.yellow.security.util.JwtUtil;
+import com.pain.yellow.security.util.TotpUtil;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 // @AllArgsConstructor
@@ -37,11 +39,22 @@ public class UserService implements UserDetailsService {
 
     private final JwtUtil jwtUtil;
 
+    private final TotpUtil totpUtil;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepo.findByUsername(username);
+    }
+
+    public Optional<User> findByUsernameAndPassword(String username, String password) {
+        return findByUsername(username)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
     }
 
     public Auth login(LoginDto loginDto) {
@@ -56,7 +69,10 @@ public class UserService implements UserDetailsService {
         return roleRepo.findByAuthority(Constants.ROLE_USER).map(role -> {
             Set<Role> authorities = new HashSet<>();
             authorities.add(role);
-            user.withAuthorities(authorities).withPassword(passwordEncoder.encode(user.getPassword()));
+            user
+                    .withAuthorities(authorities)
+                    .withPassword(passwordEncoder.encode(user.getPassword()))
+                    .withMfaKey(totpUtil.encodeKeyToString());
             return userRepo.save(user);
         }).orElseThrow(() -> new BadCredentialsException("authority error"));
     }

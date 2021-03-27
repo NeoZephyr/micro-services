@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @RequiredArgsConstructor
 @Configuration
-public class EmailConfig {
+public class SendGridEmailConfig {
 
     private final AuthProperties authProperties;
 

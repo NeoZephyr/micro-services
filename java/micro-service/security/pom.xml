@@ -28,6 +28,7 @@
         <aliyun.version>4.5.0</aliyun.version>
         <leancloud.version>6.5.3</leancloud.version>
         <sendgrid.version>4.7.0</sendgrid.version>
+        <spring.boot.version>2.4.4</spring.boot.version>
     </properties>
 
     <dependencies>
@@ -69,12 +70,14 @@
             <artifactId>java-otp</artifactId>
             <version>${otp.version}</version>
         </dependency>
+
         <!-- Redisson 依赖 -->
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>${redisson.version}</version>
         </dependency>
+
         <!-- 嵌入式 Redis 依赖，集成测试时需要 -->
         <dependency>
             <groupId>it.ozimov</groupId>

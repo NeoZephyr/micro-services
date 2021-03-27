@@ -9,9 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 @RequiredArgsConstructor
 @Configuration
-public class SmsConfig {
+public class AliSmsConfig {
     private final AuthProperties authProperties;
 
+    // Ali 短信
     @Bean
     public IAcsClient iAcsClient() {
         DefaultProfile profile = DefaultProfile.getProfile(

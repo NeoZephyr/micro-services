@@ -60,7 +60,7 @@ public class TotpUtil {
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 
-    private String encodeKeyToString() {
+    public String encodeKeyToString() {
         return encodeKeyToString(genKey());
     }
 
@@ -70,5 +70,9 @@ public class TotpUtil {
 
     public Duration getTimeStep() {
         return totp.getTimeStep();
+    }
+
+    public long getTimeStepInLong() {
+        return TIME_STEP;
     }
 }

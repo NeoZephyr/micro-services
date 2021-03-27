@@ -24,6 +24,17 @@ spring:
     always-use-message-format: false
     fallback-to-system-locale: true
     use-code-as-default-message: false
+  mail:
+    host: ${SMTP_HOST}
+    password: ${SMTP_PASSWORD}
+    port: ${SMTP_PORT}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    username: ${SMTP_USERNAME}
   mvc:
     throw-exception-if-no-handler-found: true
   application:
@@ -71,3 +82,6 @@ auth:
   lean-cloud:
     app-id: ${LEAN_CLOUD_APP_ID:id12345678}
     app-key: ${LEAN_CLOUD_APP_KEY:key12345678}
+  ali:
+    api-key: ${ALI_API_KEY:123456}
+    api-secret: ${ALI_API_SECRET:123456}
