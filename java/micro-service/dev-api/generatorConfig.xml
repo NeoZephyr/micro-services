@@ -20,13 +20,13 @@
         </jdbcConnection>
 
         <!-- 对应生成的 pojo 所在包 -->
-        <javaModelGenerator targetPackage="com.pain.yellow.api.domain.pojo" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="com.pain.yellow.api.domain.pojo" targetProject="dev-api/src/main/java"/>
 
 		<!-- 对应生成的 mapper 所在目录 -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+        <sqlMapGenerator targetPackage="mapper" targetProject="dev-api/src/main/resources"/>
 
 		<!-- 配置 mapper 对应的 java 映射 -->
-        <javaClientGenerator targetPackage="com.pain.yellow.api.mapper" targetProject="src/main/java" type="XMLMAPPER"/>
+        <javaClientGenerator targetPackage="com.pain.yellow.api.mapper" targetProject="dev-api/src/main/java" type="XMLMAPPER"/>
 
         <!-- 数据库表 -->
 		<table tableName="carousel"></table>
