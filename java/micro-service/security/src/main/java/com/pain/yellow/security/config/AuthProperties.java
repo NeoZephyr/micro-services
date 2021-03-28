@@ -9,6 +9,16 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+/**
+ * 单个注解：@Value("${xxx}")
+ *
+ * ConfigurationProperties 注解
+ * 1. 批量注解
+ * 2. 松散语法绑定
+ * 3. 不支持 SpElL 表达式
+ * 4. 通过 @Validated 支持 jsr303 校验
+ * 5. 支持复杂类型，如 Map
+ */
 @Validated
 @Configuration
 @ConfigurationProperties(prefix = "auth")
