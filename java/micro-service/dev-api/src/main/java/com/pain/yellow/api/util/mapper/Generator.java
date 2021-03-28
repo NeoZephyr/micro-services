@@ -13,7 +13,8 @@ public class Generator {
     public void generator() throws Exception {
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;
-        File configFile = new File("generatorConfig.xml");
+        File configFile = new File("dev-api/generatorConfig.xml");
+        System.out.println(configFile.getAbsolutePath());
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(configFile);
         DefaultShellCallback callback = new DefaultShellCallback(overwrite);

@@ -8,28 +8,40 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
-        <!-- 通用mapper所在目录 -->
+        <!-- 通用 mapper 所在目录 -->
         <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
-            <property name="mappers" value="com.imooc.my.mapper.MyMapper"/>
+            <property name="mappers" value="com.pain.yellow.api.mapper.ApiMapper"/>
         </plugin>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/foodie-shop-dev"
+                        connectionURL="jdbc:mysql://cdh:3306/shop-dev"
                         userId="root"
-                        password="root">
+                        password="123456">
         </jdbcConnection>
 
-        <!-- 对应生成的pojo所在包 -->
-        <javaModelGenerator targetPackage="com.imooc.pojo" targetProject="src/main/java"/>
+        <!-- 对应生成的 pojo 所在包 -->
+        <javaModelGenerator targetPackage="com.pain.yellow.api.domain.pojo" targetProject="src/main/java"/>
 
-		<!-- 对应生成的mapper所在目录 -->
+		<!-- 对应生成的 mapper 所在目录 -->
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 
-		<!-- 配置mapper对应的java映射 -->
-        <javaClientGenerator targetPackage="com.imooc.mapper" targetProject="src/main/java" type="XMLMAPPER"/>
+		<!-- 配置 mapper 对应的 java 映射 -->
+        <javaClientGenerator targetPackage="com.pain.yellow.api.mapper" targetProject="src/main/java" type="XMLMAPPER"/>
 
         <!-- 数据库表 -->
-		<table tableName=""></table>
+		<table tableName="carousel"></table>
+        <table tableName="category"></table>
+        <table tableName="items"></table>
+        <table tableName="items_comments"></table>
+        <table tableName="items_img"></table>
+        <table tableName="items_param"></table>
+        <table tableName="items_spec"></table>
+        <table tableName="order_items"></table>
+        <table tableName="order_status"></table>
+        <table tableName="orders"></table>
+        <table tableName="stu"></table>
+        <table tableName="user_address"></table>
+        <table tableName="users"></table>
 
     </context>
 </generatorConfiguration>
