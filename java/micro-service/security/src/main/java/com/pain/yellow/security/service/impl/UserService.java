@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -105,5 +107,13 @@ public class UserService implements UserDetailsService {
 
     public Optional<String> createTotp(User user) {
         return totpUtil.genTotp(user.getMfaKey());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public void pre() {}
+
+    @PostAuthorize("authentication.name.equals(returnObject.name)")
+    public User post() {
+        return null;
     }
 }

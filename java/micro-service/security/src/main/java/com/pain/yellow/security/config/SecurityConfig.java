@@ -7,6 +7,7 @@ import com.pain.yellow.security.service.impl.PasswordService;
 import com.pain.yellow.security.service.impl.UserService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -72,6 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/token").permitAll()
                 .antMatchers("/users/register").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                // .antMatchers("/api/user/{username}").access("hasRole('ADMIN') or authentication.name.equals('#username')")
+                // .antMatchers("/api/user/{username}").access("hasRole('ADMIN') or @userService.isValidUser(authentication, #username)")
                 .anyRequest().authenticated())
                 .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -173,5 +177,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             map.put("detail", exp.getMessage());
             res.getWriter().println(objectMapper.writeValueAsString(map));
         };
+    }
+
+    @ConditionalOnProperty(prefix = "auth.security", name = "role-hierarchy-enabled", havingValue = "true")
+    @Bean
+    public RoleHierarchyImpl roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy(roleHierarchyService.getRoleHierarchyExpr());
+        return roleHierarchy;
     }
 }

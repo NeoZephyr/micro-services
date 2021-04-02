@@ -1,6 +1,7 @@
 package com.pain.yellow.client.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class PingService {
 
     private final RestTemplate restTemplate;
@@ -26,6 +28,13 @@ public class PingService {
         String host = provider.getHost();
         int port = provider.getPort();
         String url = String.format("http://%s:%d/ping", host, port);
+        log.info("url: " + url);
+        Map result = restTemplate.getForObject(url, Map.class);
+        return result;
+    }
+
+    public Map autoPing() {
+        String url = "http://provider/ping";
         Map result = restTemplate.getForObject(url, Map.class);
         return result;
     }
