@@ -1,26 +1,88 @@
 package com.pain.yellow.security.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pain.yellow.security.util.Constants;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
+@With
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"users"})
+// @QueryEntity
 @Entity
-@Table(name = "role")
-public class Role implements GrantedAuthority, Serializable {
+@Table(name = "roles")
+public class Role implements Serializable {
+    private static final long serialVersionUID = 1L;
 
+    /**
+     * 自增长 ID，唯一标识
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 角色名称，有唯一约束，不能重复
+     */
+    @NotNull
+    @Pattern(regexp = Constants.PATTERN_ROLE_NAME)
     @Column(name = "role_name", unique = true, nullable = false, length = 50)
-    private String authority;
+    private String roleName;
+
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "display_name", nullable = false, length = 50)
+    private String displayName;
+
+    @NotNull
+    @Column(name = "built_in", nullable = false)
+    private boolean builtIn;
+
+    @Builder.Default
+    @JsonIgnore
+    @Fetch(FetchMode.JOIN)
+    @ManyToMany
+    @JoinTable(
+            name = "roles_permissions",
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @BatchSize(size = 20)
+    private Set<Permission> permissions = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Role)) {
+            return false;
+        }
+        Role role = (Role) o;
+        return id != null && id.equals(role.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(roleName);
+    }
 }
