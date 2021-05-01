@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final PasswordService passwordService;
     private final JwtFilter jwtFilter;
+    private final RoleHierarchyService roleHierarchyService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

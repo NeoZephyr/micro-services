@@ -16,7 +16,6 @@ server:
     encoding:
       charset: utf-8
       force: true
-
 spring:
   messages:
     basename: messages
@@ -64,6 +63,9 @@ spring:
         ddl-auto: create-drop
   profiles:
     active: ${ACTIVE_PROFILE:dev}
+  jpa:
+    generate-ddl: true
+    show-sql: true
 #  security:
 #    user:
 #      name: user

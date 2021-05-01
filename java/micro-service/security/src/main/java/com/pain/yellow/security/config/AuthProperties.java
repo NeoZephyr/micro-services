@@ -49,6 +49,11 @@ public class AuthProperties {
     @Getter
     @Setter
     @Valid
+    private Security security = new Security();
+
+    @Getter
+    @Setter
+    @Valid
     private Ali ali = new Ali();
 
     @Getter
@@ -71,6 +76,10 @@ public class AuthProperties {
          */
         @Min(3600000L)
         private long refreshTokenExpireTime = 30 * 24 * 3600 * 1000L;
+
+        private String key;
+
+        private String refreshKey;
     }
 
     @Getter
@@ -99,5 +108,11 @@ public class AuthProperties {
     public static class EmailProvider {
         private String name;
         private String apiKey;
+    }
+
+    @Getter
+    @Setter
+    public static class Security {
+        private boolean roleHierarchyEnabled;
     }
 }

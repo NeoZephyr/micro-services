@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("authentication.name == #user.username or " +
-        "hasAnyAuthority('" + Constants.ROLE_ADMIN + "', '" + Constants.AUTHORITY_USER_UPDATE + "')")
-public @interface RoleAdminOrSelfWithUserParam {
+@PreAuthorize("hasRole('" + Constants.ROLE_ADMIN + "') and " +
+        "authentication.name != #username")
+public @interface RoleAdminNotSelf {
 }

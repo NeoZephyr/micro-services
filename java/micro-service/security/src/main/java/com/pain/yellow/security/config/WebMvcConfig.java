@@ -73,6 +73,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     public MessageResolver messageResolver() {
+        new Passay
         return new SpringMessageResolver(messageSource);
     }
 
