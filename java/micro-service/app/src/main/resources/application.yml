@@ -34,7 +34,7 @@ server:
 
 # mybatis mapper 配置
 mapper:
-  mappers: com.pain.yellow.app.mapper.ApiMapper
+  mappers: com.pain.yellow.app.util.mapper.ApiMapper
   not-empty: false
   identity: MySQL
 

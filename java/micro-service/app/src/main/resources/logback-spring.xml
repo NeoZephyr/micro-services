@@ -14,7 +14,7 @@
                 %msg：日志消息
                 %n是换行符
             -->
-            <pattern>%white(%d{mm:ss.SSS}) %green([%thread]) %cyan(%-5level) %yellow(%logger{36}) %magenta(-) %black(%msg%n)</pattern>
+            <pattern>%white(%d{mm:ss.SSS}) %green([%thread]) %cyan(%-5level) %yellow(%logger{36}) %magenta(-) %white(%msg%n)</pattern>
             <charset>utf8</charset>
         </encoder>
     </appender>

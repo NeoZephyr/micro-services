@@ -1,4 +1,4 @@
-package com.pain.yellow.security.annotation;
+package com.pain.yellow.app.annotation;
 
 import com.pain.yellow.security.util.Constants;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,6 +7,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasRole('" + Constants.ROLE_ADMIN + "')")
-public @interface RoleAdmin {
+@PreAuthorize("hasAnyAuthority('" +
+        Constants.ROLE_ADMIN +
+        "', '" +
+        Constants.AUTHORITY_USER_UPDATE +
+        "')")
+public @interface RoleAdminOrUpdate {
 }

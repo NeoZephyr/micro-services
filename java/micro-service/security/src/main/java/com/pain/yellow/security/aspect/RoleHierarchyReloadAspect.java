@@ -12,7 +12,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 @Aspect
 public class RoleHierarchyReloadAspect {
     private final RoleHierarchyImpl roleHierarchy;
-    private final RoleHierarchyService roleHierarchyService;
+//    private final RoleHierarchyService roleHierarchyService;
 
     @Pointcut("execution(* com.pain.yellow.security.service.admin.*.*(..))")
     public void applicationPackagePointcut() {
@@ -20,8 +20,8 @@ public class RoleHierarchyReloadAspect {
 
     @AfterReturning("applicationPackagePointcut() && @annotation(com.pain.yellow.security.annotation.ReloadRoleHierarchy)")
     public void reloadRoleHierarchy() {
-        val roleMap = roleHierarchyService.getRoleHierarchyExpr();
-        roleHierarchy.setHierarchy(roleMap);
+//        val roleMap = roleHierarchyService.getRoleHierarchyExpr();
+//        roleHierarchy.setHierarchy(roleMap);
         log.debug("RoleHierarchy Reloaded");
     }
 }

@@ -1,6 +1,6 @@
-package com.pain.yellow.security.validation;
+package com.pain.yellow.app.util.validator;
 
-import com.pain.yellow.security.annotation.ValidPassword;
+import com.pain.yellow.app.annotation.validator.ValidPassword;
 import lombok.RequiredArgsConstructor;
 import org.passay.*;
 import org.passay.spring.SpringMessageResolver;

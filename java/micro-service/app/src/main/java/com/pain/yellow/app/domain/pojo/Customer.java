@@ -2,7 +2,6 @@ package com.pain.yellow.app.domain.pojo;
 
 import javax.persistence.*;
 
-@Table(name = "customer")
 public class Customer {
     @Id
     private Long id;

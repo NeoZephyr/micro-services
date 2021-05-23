@@ -1,4 +1,4 @@
-package com.pain.yellow.app.mapper;
+package com.pain.yellow.app.util.mapper;
 
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;

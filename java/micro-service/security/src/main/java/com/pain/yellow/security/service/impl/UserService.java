@@ -86,7 +86,7 @@ public class UserService implements UserDetailsService {
             Set<Role> authorities = new HashSet<>();
             authorities.add(role);
             user
-                    .withAuthorities(authorities)
+//                    .withAuthorities(authorities)
                     .withPassword(passwordEncoder.encode(user.getPassword()))
                     .withMfaKey(totpUtil.encodeKeyToString());
             return userRepo.save(user);

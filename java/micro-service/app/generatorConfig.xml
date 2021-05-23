@@ -10,7 +10,7 @@
 
         <!-- 通用 mapper 所在目录 -->
         <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
-            <property name="mappers" value="com.pain.yellow.app.mapper.ApiMapper"/>
+            <property name="mappers" value="com.pain.yellow.app.util.mapper.ApiMapper"/>
         </plugin>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"

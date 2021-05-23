@@ -1,7 +1,7 @@
-package com.pain.yellow.security.validation;
+package com.pain.yellow.app.util.validator;
 
-import com.pain.yellow.security.annotation.MatchPassword;
-import com.pain.yellow.security.domain.dto.UserDto;
+import com.pain.yellow.app.annotation.validator.MatchPassword;
+import com.pain.yellow.app.domain.dto.UserDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

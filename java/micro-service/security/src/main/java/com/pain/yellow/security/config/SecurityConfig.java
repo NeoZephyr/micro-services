@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final PasswordService passwordService;
     private final JwtFilter jwtFilter;
-    private final RoleHierarchyService roleHierarchyService;
+//    private final RoleHierarchyService roleHierarchyService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -78,7 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // .antMatchers("/api/user/{username}").access("hasRole('ADMIN') or authentication.name.equals('#username')")
                 // .antMatchers("/api/user/{username}").access("hasRole('ADMIN') or @userService.isValidUser(authentication, #username)")
                 .anyRequest().authenticated())
-                .addFilterAt(restAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 配置跨域
@@ -98,39 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userService) // 配置 AuthenticationManager 使用 userService
-                .userDetailsPasswordManager(passwordService) // 密码自动升级服务
-                .passwordEncoder(passwordEncoder());
-
-//        auth
-//                .jdbcAuthentication()
-//                .withDefaultSchema()
-//                .dataSource(dataSource)
-//                .withUser("user")
-//                .password(passwordEncoder().encode("123456"))
-//                .roles("USER", "ADMIN");
-
-//        auth
-//                .inMemoryAuthentication()
-//                .withUser("user")
-//                .password(passwordEncoder().encode("123456"))
-//                .roles("USER", "ADMIN");
-    }
-
-    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        String defaultId = "bcrypt";
-        Map<String, PasswordEncoder> map = new HashMap<>();
-        map.put(defaultId, new BCryptPasswordEncoder());
-        map.put("SHA-1", new MessageDigestPasswordEncoder("SHA-1"));
-        return new DelegatingPasswordEncoder(defaultId, map);
     }
 
     @Bean
@@ -150,41 +118,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    private RestAuthenticationFilter restAuthenticationFilter() throws Exception {
-        RestAuthenticationFilter restAuthenticationFilter = new RestAuthenticationFilter(objectMapper);
-        restAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
-        restAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-        restAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        restAuthenticationFilter.setFilterProcessesUrl("/authorize/login");
-        return restAuthenticationFilter;
-    }
-
-    private AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return (req, res, auth) -> {
-            ObjectMapper objectMapper = new ObjectMapper();
-            res.setStatus(HttpStatus.OK.value());
-            res.getWriter().println(objectMapper.writeValueAsString(auth));
-        };
-    }
-
-    private AuthenticationFailureHandler authenticationFailureHandler() {
-        return (req, res, exp) -> {
-            ObjectMapper objectMapper = new ObjectMapper();
-            res.setStatus(HttpStatus.UNAUTHORIZED.value());
-            res.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            res.setCharacterEncoding("UTF-8");
-            Map<String, String> map = new HashMap<>();
-            map.put("title", "authentication failed");
-            map.put("detail", exp.getMessage());
-            res.getWriter().println(objectMapper.writeValueAsString(map));
-        };
-    }
-
     @ConditionalOnProperty(prefix = "auth.security", name = "role-hierarchy-enabled", havingValue = "true")
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy(roleHierarchyService.getRoleHierarchyExpr());
+//        roleHierarchy.setHierarchy(roleHierarchyService.getRoleHierarchyExpr());
         return roleHierarchy;
     }
 }

@@ -1,6 +1,6 @@
-package com.pain.yellow.security.validation;
+package com.pain.yellow.app.util.validator;
 
-import com.pain.yellow.security.annotation.ValidEmail;
+import com.pain.yellow.app.annotation.validator.ValidEmail;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

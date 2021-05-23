@@ -62,12 +62,6 @@ public class UserController {
         userService.register(user);
     }
 
-    @GetMapping("/principal")
-    public Authentication getPrincipal(Authentication authentication) {
-        // return SecurityContextHolder.getContext().getAuthentication();
-        return authentication;
-    }
-
     @PostMapping("/token")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
         return userService.findByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword()).map(user -> {

@@ -1,0 +1,78 @@
+###
+@password=b3c91f46-3d0f-4d33-97f8-89c09edbe4b0
+@host=localhost:8080
+
+###
+GET http://localhost:8080/ping
+Authorization: Basic user {{password}}
+
+###
+GET http://localhost:8080/authorize/principal
+Accept: application/json
+Authorization: Basic user {{password}}
+
+### 登录
+
+POST http://localhost:8080/authorize/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "afa9c83a-8be4-48e5-bdaa-337a298089cd"
+}
+
+### Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJ5ZWxsb3ciLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sInN1YiI6InVzZXIiLCJpYXQiOjE2MTQ3MDE4NjAsImV4cCI6MTYxNDcwMjA0MH0.wVq1wbrcBgxnDI0t_VJerUyGACB7lWoeRG6_iL-7Po9jlZ_HkZlBwRXXbWt_O0WX8SH058tqULPGlkNjXifTgg
+
+###
+POST http://localhost:8080/users/register
+Content-Type: application/json
+
+{
+  "username": "pain",
+  "name":"里斯",
+  "email": "lisi@qq.com",
+  "mobile":"13900983451",
+  "password": "Ab1234@!",
+  "matchPassword": "Ab1234@!"
+}
+
+
+###
+POST http://localhost:8080/users/token
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "12345678"
+}
+
+###
+
+POST http://localhost:8080/users/register
+Accept-Language: zh-CN
+Content-Type: application/json
+
+{
+  "username": "jack",
+  "password": "1234a5678",
+  "matchPassword": "12A34a5!678",
+  "email": "user@qqcom",
+  "name": "侯景"
+}
+
+
+###
+GET http://localhost:8080/customers/greeting
+Authorization: Basic user {{password}}
+
+###
+
+POST http://localhost:8080/customers/greeting?name=jack
+Authorization: Basic user {{password}}
+Content-Type: application/json
+
+{
+  "gender": "female",
+  "name": "pain"
+}
+

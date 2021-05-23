@@ -12,10 +12,11 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 @Configuration
 public class AopConfig {
     private final RoleHierarchyImpl roleHierarchy;
-    private final RoleHierarchyService roleHierarchyService;
+//    private final RoleHierarchyService roleHierarchyService;
 
     @Bean
     public RoleHierarchyReloadAspect roleHierarchyReloadAspect() {
-        return new RoleHierarchyReloadAspect(roleHierarchy, roleHierarchyService);
+//        return new RoleHierarchyReloadAspect(roleHierarchy, roleHierarchyService);
+        return null;
     }
 }

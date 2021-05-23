@@ -1,4 +1,4 @@
-package com.pain.yellow.security.annotation;
+package com.pain.yellow.app.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,6 @@
-package com.pain.yellow.security.annotation;
+package com.pain.yellow.app.annotation.validator;
 
-import com.pain.yellow.security.validation.MatchPasswordValidator;
+import com.pain.yellow.app.util.validator.MatchPasswordValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,4 +1,4 @@
-package com.pain.yellow.security.annotation;
+package com.pain.yellow.app.annotation;
 
 import com.pain.yellow.security.util.Constants;
 import org.springframework.security.access.prepost.PreAuthorize;
