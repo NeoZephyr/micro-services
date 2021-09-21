@@ -1,4 +1,4 @@
-package com.pain.yellow.response;
+package com.pain.blue.rest.response;
 
 import lombok.Data;
 
@@ -6,7 +6,6 @@ import java.util.List;
 
 @Data
 public class PageResult<E> {
-
     private int page;
     private long records;
     private long total;

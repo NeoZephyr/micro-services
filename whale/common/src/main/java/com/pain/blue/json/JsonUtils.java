@@ -1,4 +1,4 @@
-package com.pain.yellow.json;
+package com.pain.blue.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
@@ -9,9 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 
 @Slf4j
-public class JsonUtil {
+public class JsonUtils {
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         // 序列化所有字段

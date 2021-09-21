@@ -1,4 +1,4 @@
-package com.pain.yellow.cookie;
+package com.pain.blue.cookie;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 @Slf4j
-public class CookieUtil {
+public class CookieUtils {
 
     public static void addCookie(HttpServletResponse response,
                                  String domain,

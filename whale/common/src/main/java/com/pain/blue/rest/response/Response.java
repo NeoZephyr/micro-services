@@ -1,28 +1,29 @@
-package com.pain.yellow.response;
+package com.pain.blue.rest.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class RestResponse<T> {
+public class Response<T> {
+
     private boolean success;
     private int code;
     private String msg;
     private T data;
 
-    public static <T> RestResponse<T> success() {
+    public static <T> Response<T> success() {
         return ResponseBuilder.<T>newBuilder().success(true).build();
     }
 
-    public static <T> RestResponse<T> success(int code, String msg) {
+    public static <T> Response<T> success(int code, String msg) {
         return ResponseBuilder.<T>newBuilder()
                 .success(true)
                 .code(code)
                 .msg(msg).build();
     }
 
-    public static <T> RestResponse<T> success(int code, String msg, T data) {
+    public static <T> Response<T> success(int code, String msg, T data) {
         return ResponseBuilder.<T>newBuilder()
                 .success(true)
                 .code(code)
@@ -30,18 +31,18 @@ public class RestResponse<T> {
                 .data(data).build();
     }
 
-    public static <T> RestResponse<T> error() {
+    public static <T> Response<T> error() {
         return ResponseBuilder.<T>newBuilder().success(false).build();
     }
 
-    public static <T> RestResponse<T> error(int code, String msg) {
+    public static <T> Response<T> error(int code, String msg) {
         return ResponseBuilder.<T>newBuilder()
                 .success(false)
                 .code(code)
                 .msg(msg).build();
     }
 
-    public static <T> RestResponse<T> error(int code, String msg, T data) {
+    public static <T> Response<T> error(int code, String msg, T data) {
         return ResponseBuilder.<T>newBuilder()
                 .success(false)
                 .code(code)
@@ -49,7 +50,7 @@ public class RestResponse<T> {
                 .data(data).build();
     }
 
-    public static <T> RestResponse<T> error(ResponseStatus status) {
+    public static <T> Response<T> error(ResponseStatus status) {
         return ResponseBuilder.<T>newBuilder()
                 .success(false)
                 .code(status.getCode())
@@ -87,8 +88,8 @@ public class RestResponse<T> {
             return this;
         }
 
-        RestResponse<U> build() {
-            return new RestResponse<U>(success, code, msg, data);
+        Response<U> build() {
+            return new Response<U>(success, code, msg, data);
         }
     }
 }

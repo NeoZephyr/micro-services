@@ -1,7 +1,6 @@
-package com.pain.yellow.response;
+package com.pain.blue.rest.response;
 
 public enum ResponseStatus {
-
     SUCCESS(0, "success"),
     ;
 
