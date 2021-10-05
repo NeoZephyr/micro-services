@@ -1,7 +1,8 @@
-GET localhost:8080/heroes
+GET http://localhost:8080/heroes
+Accept: application/json
 
 > {%
 client.test("hello", function() {
-  client.log(response.body)
+  client.log(JSON.stringify(response.body))
 })
 %}

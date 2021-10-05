@@ -18,6 +18,7 @@ public class HeroController {
 
     @GetMapping("")
     public List<Hero> list() {
+        System.out.println("xxx");
         return heroService.list();
     }
 }
