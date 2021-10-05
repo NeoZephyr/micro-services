@@ -86,8 +86,6 @@ export default defineComponent({
     onMounted(() => {
       console.log("onMounted")
       axios.get("/heroes").then((response) => {
-        console.log(response)
-
         const data = response.data
         books.value = data
       })
