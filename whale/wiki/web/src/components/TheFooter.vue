@@ -1,6 +1,6 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Footer...
+    小鲸鱼图书馆
   </a-layout-footer>
 </template>
 
