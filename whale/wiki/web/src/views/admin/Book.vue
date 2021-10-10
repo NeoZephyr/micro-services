@@ -1,5 +1,115 @@
 <template>
-  <div class="about">
-    <h1>Book</h1>
-  </div>
+  <a-layout>
+    <a-layout-content
+        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
+    >
+      <a-table
+          :columns="columns"
+          :row-key="record => record.id"
+          :data-source="books"
+          :pagination="pagination"
+          :loading="loading"
+          @change="handleTableChange"
+      >
+        <template #cover="{ text: cover }">
+          <img v-if="cover" :src="cover" alt="avatar">
+        </template>
+        <template v-slot:action="{ text, record }">
+          <a-space size="small">
+            <a-button type="primary">
+              编辑
+            </a-button>
+            <a-button type="danger">
+              删除
+            </a-button>
+          </a-space>
+        </template>
+      </a-table>
+    </a-layout-content>
+  </a-layout>
 </template>
+
+<script lang="ts">
+import {defineComponent, onMounted, ref} from 'vue';
+import axios from "axios";
+
+export default defineComponent({
+  name: 'Book',
+  setup() {
+    const books = ref()
+    const pagination = ref({
+      current: 1,
+      pageSize: 2,
+      total: 0
+    })
+    const loading = ref(false)
+    const columns = [
+      {
+        title: "封面",
+        dataIndex: "cover",
+        slots: { customRender: "cover" }
+      },
+      {
+        title: "名称",
+        dataIndex: "name"
+      },
+      {
+        title: "分类",
+        key: "categoryId",
+        dataIndex: "categoryId"
+      },
+      {
+        title: "子分类",
+        key: "subCategoryId",
+        dataIndex: "subCategoryId"
+      },
+      {
+        title: "文档数",
+        dataIndex: "docCount"
+      },
+      {
+        title: "阅读数",
+        dataIndex: "viewCount"
+      },
+      {
+        title: "点赞数",
+        dataIndex: "voteCount"
+      },
+      {
+        title: "Action",
+        key: "action",
+        slots: { customRender: "action" }
+      }
+    ]
+
+    const handleQuery = (params: any) => {
+      loading.value = true
+      axios.get("/books", params).then((response) => {
+        loading.value = false
+        books.value = response.data
+        pagination.value.current = params.page
+      })
+    }
+
+    const handleTableChange = (pagination: any) => {
+      console.log("pagination:" + pagination)
+      handleQuery({
+        page: pagination.current,
+        size: pagination.pageSize
+      })
+    }
+
+    onMounted(() => {
+      handleQuery({})
+    })
+
+    return {
+      books,
+      pagination,
+      columns,
+      loading,
+      handleTableChange
+    }
+  }
+});
+</script>

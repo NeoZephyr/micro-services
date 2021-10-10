@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pain.blue.wiki.mapper.BookMapper">
+  <resultMap id="BaseResultMap" type="com.pain.blue.wiki.domain.pojo.Book">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="sub_category_id" jdbcType="BIGINT" property="subCategoryId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="cover" jdbcType="VARCHAR" property="cover" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="view_count" jdbcType="BIGINT" property="viewCount" />
+    <result column="vote_count" jdbcType="BIGINT" property="voteCount" />
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
+    <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, `name`, category_id, sub_category_id, description, cover, price, view_count, 
+    vote_count, date_created, last_updated
+  </sql>
+  <select id="selectByExample" parameterType="com.pain.blue.wiki.domain.pojo.BookExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from book
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from book
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from book
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.pain.blue.wiki.domain.pojo.BookExample">
+    delete from book
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.pain.blue.wiki.domain.pojo.Book">
+    insert into book (id, `name`, category_id, 
+      sub_category_id, description, cover, 
+      price, view_count, vote_count, 
+      date_created, last_updated)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{categoryId,jdbcType=BIGINT}, 
+      #{subCategoryId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{viewCount,jdbcType=BIGINT}, #{voteCount,jdbcType=BIGINT}, 
+      #{dateCreated,jdbcType=TIMESTAMP}, #{lastUpdated,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pain.blue.wiki.domain.pojo.Book">
+    insert into book
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="subCategoryId != null">
+        sub_category_id,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="cover != null">
+        cover,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="viewCount != null">
+        view_count,
+      </if>
+      <if test="voteCount != null">
+        vote_count,
+      </if>
+      <if test="dateCreated != null">
+        date_created,
+      </if>
+      <if test="lastUpdated != null">
+        last_updated,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="subCategoryId != null">
+        #{subCategoryId,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="cover != null">
+        #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="viewCount != null">
+        #{viewCount,jdbcType=BIGINT},
+      </if>
+      <if test="voteCount != null">
+        #{voteCount,jdbcType=BIGINT},
+      </if>
+      <if test="dateCreated != null">
+        #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdated != null">
+        #{lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.pain.blue.wiki.domain.pojo.BookExample" resultType="java.lang.Long">
+    select count(*) from book
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update book
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.name != null">
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryId != null">
+        category_id = #{record.categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="record.subCategoryId != null">
+        sub_category_id = #{record.subCategoryId,jdbcType=BIGINT},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cover != null">
+        cover = #{record.cover,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null">
+        price = #{record.price,jdbcType=DECIMAL},
+      </if>
+      <if test="record.viewCount != null">
+        view_count = #{record.viewCount,jdbcType=BIGINT},
+      </if>
+      <if test="record.voteCount != null">
+        vote_count = #{record.voteCount,jdbcType=BIGINT},
+      </if>
+      <if test="record.dateCreated != null">
+        date_created = #{record.dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastUpdated != null">
+        last_updated = #{record.lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update book
+    set id = #{record.id,jdbcType=BIGINT},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      category_id = #{record.categoryId,jdbcType=BIGINT},
+      sub_category_id = #{record.subCategoryId,jdbcType=BIGINT},
+      description = #{record.description,jdbcType=VARCHAR},
+      cover = #{record.cover,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DECIMAL},
+      view_count = #{record.viewCount,jdbcType=BIGINT},
+      vote_count = #{record.voteCount,jdbcType=BIGINT},
+      date_created = #{record.dateCreated,jdbcType=TIMESTAMP},
+      last_updated = #{record.lastUpdated,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pain.blue.wiki.domain.pojo.Book">
+    update book
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="subCategoryId != null">
+        sub_category_id = #{subCategoryId,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="cover != null">
+        cover = #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="viewCount != null">
+        view_count = #{viewCount,jdbcType=BIGINT},
+      </if>
+      <if test="voteCount != null">
+        vote_count = #{voteCount,jdbcType=BIGINT},
+      </if>
+      <if test="dateCreated != null">
+        date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdated != null">
+        last_updated = #{lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pain.blue.wiki.domain.pojo.Book">
+    update book
+    set `name` = #{name,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=BIGINT},
+      sub_category_id = #{subCategoryId,jdbcType=BIGINT},
+      description = #{description,jdbcType=VARCHAR},
+      cover = #{cover,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      view_count = #{viewCount,jdbcType=BIGINT},
+      vote_count = #{voteCount,jdbcType=BIGINT},
+      date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      last_updated = #{lastUpdated,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -18,3 +18,11 @@ spring:
       connection-test-query: SELECT 1
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
+
+logging:
+  level:
+    com:
+      pain:
+        blue:
+          wiki:
+            mapper: trace
