@@ -79,15 +79,19 @@ import axios from "axios";
 export default defineComponent({
   name: 'Home',
   setup() {
-    console.log("setup")
-
     const books = ref()
 
     onMounted(() => {
-      console.log("onMounted")
-      axios.get("/heroes").then((response) => {
-        const data = response.data
-        books.value = data
+      axios.get("/books", {
+        params: {
+          page: 1,
+          size: 100
+        }
+      }).then((response) => {
+        console.log("responseData:", response.data)
+        const result: any = response.data
+        const data: any = result.data
+        books.value = data.rows
       })
     })
 

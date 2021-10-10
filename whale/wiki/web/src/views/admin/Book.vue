@@ -29,6 +29,13 @@
   </a-layout>
 </template>
 
+<style scoped>
+img {
+  width: 50px;
+  height: 50px;
+}
+</style>
+
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from "axios";
@@ -84,10 +91,18 @@ export default defineComponent({
 
     const handleQuery = (params: any) => {
       loading.value = true
-      axios.get("/books", params).then((response) => {
+      axios.get("/books", {
+        params: {
+          page: params.page,
+          size: params.size
+        }
+      }).then((response) => {
         loading.value = false
-        books.value = response.data
+        const result: any = response.data
+        const data: any = result.data
+        books.value = data.rows
         pagination.value.current = params.page
+        pagination.value.total = data.total
       })
     }
 
@@ -100,7 +115,10 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      handleQuery({})
+      handleQuery({
+        page: 1,
+        size: pagination.value.pageSize
+      })
     })
 
     return {
