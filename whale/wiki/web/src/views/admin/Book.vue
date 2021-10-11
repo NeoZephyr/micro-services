@@ -16,7 +16,7 @@
         </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
-            <a-button type="primary">
+            <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
             <a-button type="danger">
@@ -27,6 +27,31 @@
       </a-table>
     </a-layout-content>
   </a-layout>
+
+  <a-modal
+      title="编辑书本表单"
+      v-model:visible="editorVisible"
+      :confirm-loading="editorLoading"
+      @ok="handleEditorOk"
+  >
+    <a-form :model="book" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+      <a-form-item label="封面">
+        <a-input v-model:value="book.cover" />
+      </a-form-item>
+      <a-form-item label="名称">
+        <a-input v-model:value="book.name" />
+      </a-form-item>
+      <a-form-item label="分类">
+        <a-input v-model:value="book.categoryId" />
+      </a-form-item>
+      <a-form-item label="子分类">
+        <a-input v-model:value="book.subCategoryId" />
+      </a-form-item>
+      <a-form-item label="描述">
+        <a-input v-model:value="book.description" type="textarea" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <style scoped>
@@ -50,6 +75,11 @@ export default defineComponent({
       total: 0
     })
     const loading = ref(false)
+
+    const book = ref({})
+    const editorVisible = ref(false)
+    const editorLoading = ref(false)
+
     const columns = [
       {
         title: "封面",
@@ -114,6 +144,19 @@ export default defineComponent({
       })
     }
 
+    const handleEditorOk = () => {
+      editorLoading.value = true
+      setTimeout(() => {
+        editorLoading.value = false
+        editorVisible.value = false
+      }, 1000)
+    }
+
+    const edit = (record: any) => {
+      editorVisible.value = true
+      book.value = record
+    }
+
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -126,7 +169,12 @@ export default defineComponent({
       pagination,
       columns,
       loading,
-      handleTableChange
+      editorVisible,
+      editorLoading,
+      book,
+      handleTableChange,
+      edit,
+      handleEditorOk
     }
   }
 });
