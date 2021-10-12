@@ -9,6 +9,8 @@
     <version>1.0</version>
     <modules>
         <module>common</module>
+        <module>eureka</module>
+        <module>provider</module>
     </modules>
     <packaging>pom</packaging>
     <name>whale</name>
