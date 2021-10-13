@@ -146,10 +146,21 @@ export default defineComponent({
 
     const handleEditorOk = () => {
       editorLoading.value = true
-      setTimeout(() => {
-        editorLoading.value = false
-        editorVisible.value = false
-      }, 1000)
+      const bookInstance: any = book.value
+
+      axios.put("/books/" + bookInstance.id, book.value).then((response) => {
+        const data: any = response.data
+
+        if (data.success) {
+          editorLoading.value = false
+          editorVisible.value = false
+
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          })
+        }
+      })
     }
 
     const edit = (record: any) => {

@@ -1,10 +1,21 @@
-package com.pain.blue.wiki.query;
+package com.pain.blue.wiki.request;
 
-public class BookIndexQuery extends PageQuery {
+import java.math.BigDecimal;
+
+public class BookUpdateRequest {
     private Long id;
+
     private String name;
+
     private Long categoryId;
+
     private Long subCategoryId;
+
+    private String description;
+
+    private String cover;
+
+    private BigDecimal price;
 
     public Long getId() {
         return id;
@@ -38,13 +49,27 @@ public class BookIndexQuery extends PageQuery {
         this.subCategoryId = subCategoryId;
     }
 
-    @Override
-    public String toString() {
-        return "BookIndexQuery{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", categoryId=" + categoryId +
-                ", subCategoryId=" + subCategoryId +
-                "} " + super.toString();
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

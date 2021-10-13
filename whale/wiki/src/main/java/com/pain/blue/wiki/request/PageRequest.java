@@ -1,6 +1,6 @@
-package com.pain.blue.wiki.query;
+package com.pain.blue.wiki.request;
 
-public class PageQuery {
+public class PageRequest {
 
     private int page = 1;
     private int size = 10;
