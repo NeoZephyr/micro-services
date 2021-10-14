@@ -2,6 +2,7 @@ package com.pain.blue.wiki.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.pain.blue.id.IdGenerator;
 import com.pain.blue.mapping.CopyUtils;
 import com.pain.blue.rest.response.PageResult;
 import com.pain.blue.wiki.domain.dto.BookDTO;
@@ -9,6 +10,7 @@ import com.pain.blue.wiki.domain.pojo.Book;
 import com.pain.blue.wiki.domain.pojo.BookExample;
 import com.pain.blue.wiki.mapper.BookMapper;
 import com.pain.blue.wiki.request.BookIndexRequest;
+import com.pain.blue.wiki.request.BookSaveRequest;
 import com.pain.blue.wiki.request.BookUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import java.util.List;
 public class BookService {
 
     private final BookMapper bookMapper;
+    private final IdGenerator idGenerator;
 
     public PageResult<BookDTO> index(BookIndexRequest query) {
         log.info("query: " + query);
@@ -47,6 +50,12 @@ public class BookService {
         pageResult.setRows(bookDTOList);
 
         return pageResult;
+    }
+
+    public void save(BookSaveRequest saveRequest) {
+        Book book = CopyUtils.copy(saveRequest, Book.class);
+        book.setId(idGenerator.gen());
+        bookMapper.insert(book);
     }
 
     public void update(Long id, BookUpdateRequest updateRequest) {
