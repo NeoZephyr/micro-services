@@ -24,9 +24,16 @@
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
-            <a-button type="danger">
-              删除
-            </a-button>
+            <a-popconfirm
+                title="删除后不可恢复，确认删除?"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="handleDelete(record.id)"
+            >
+              <a-button type="danger">
+                删除
+              </a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -69,6 +76,7 @@ img {
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from "axios";
+import { message } from 'ant-design-vue';
 
 export default defineComponent({
   name: 'Book',
@@ -135,9 +143,14 @@ export default defineComponent({
         loading.value = false
         const result: any = response.data
         const data: any = result.data
-        books.value = data.rows
-        pagination.value.current = params.page
-        pagination.value.total = data.total
+
+        if (result.success) {
+          books.value = data.rows
+          pagination.value.current = params.page
+          pagination.value.total = data.total
+        } else {
+          message.error(data.msg)
+        }
       })
     }
 
@@ -156,32 +169,51 @@ export default defineComponent({
       if (bookInstance.id) {
         axios.put("/books/" + bookInstance.id, book.value).then((response) => {
           const data: any = response.data
+          editorLoading.value = false
 
           if (data.success) {
-            editorLoading.value = false
             editorVisible.value = false
 
             handleQuery({
               page: pagination.value.current,
               size: pagination.value.pageSize
             })
+          } else {
+            message.error(data.msg)
           }
         })
       } else {
         axios.post("/books", book.value).then((response) => {
           const data: any = response.data
+          editorLoading.value = false
 
           if (data.success) {
-            editorLoading.value = false
             editorVisible.value = false
 
             handleQuery({
               page: pagination.value.current,
               size: pagination.value.pageSize
             })
+          } else {
+            message.error(data.msg)
           }
         })
       }
+    }
+
+    const handleDelete = (id: number) => {
+      axios.delete("/books/" + id).then((response) => {
+        const data: any = response.data
+
+        if (data.success) {
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          })
+        } else {
+          message.error(data.msg);
+        }
+      })
     }
 
     const edit = (record: any) => {
@@ -212,6 +244,7 @@ export default defineComponent({
       handleTableChange,
       edit,
       add,
+      handleDelete,
       handleEditorOk
     }
   }

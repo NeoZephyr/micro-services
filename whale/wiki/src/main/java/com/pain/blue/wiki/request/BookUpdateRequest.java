@@ -1,10 +1,12 @@
 package com.pain.blue.wiki.request;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 public class BookUpdateRequest {
     private Long id;
 
+    @NotBlank(message = "名称不能为空")
     private String name;
 
     private Long categoryId;

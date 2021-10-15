@@ -63,4 +63,8 @@ public class BookService {
         Book book = CopyUtils.copy(updateRequest, Book.class);
         bookMapper.updateByPrimaryKey(book);
     }
+
+    public void delete(Long id) {
+        bookMapper.deleteByPrimaryKey(id);
+    }
 }
