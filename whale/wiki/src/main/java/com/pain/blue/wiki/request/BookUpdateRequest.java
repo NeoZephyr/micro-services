@@ -1,8 +1,11 @@
 package com.pain.blue.wiki.request;
 
+import lombok.ToString;
+
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
+@ToString
 public class BookUpdateRequest {
     private Long id;
 

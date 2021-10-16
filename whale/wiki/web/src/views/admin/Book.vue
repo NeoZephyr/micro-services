@@ -3,11 +3,21 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <p>
-        <a-button type="primary" @click="add" size="large">
-          新增
-        </a-button>
-      </p>
+      <a-form layout="inline" :model="searchParam">
+        <a-form-item>
+          <a-input v-model:value="searchParam.name" placeholder="名称" />
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+            查询
+          </a-button>
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" @click="add">
+            新增
+          </a-button>
+        </a-form-item>
+      </a-form>
       <a-table
           :columns="columns"
           :row-key="record => record.id"
@@ -77,6 +87,7 @@ img {
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from "axios";
 import { message } from 'ant-design-vue';
+import {ObjectUtils} from "@/util/ObjectUtils";
 
 export default defineComponent({
   name: 'Book',
@@ -84,9 +95,11 @@ export default defineComponent({
     const books = ref()
     const pagination = ref({
       current: 1,
-      pageSize: 2,
+      pageSize: 10,
       total: 0
     })
+    const searchParam = ref()
+    searchParam.value = {}
     const loading = ref(false)
 
     const book = ref({})
@@ -134,10 +147,12 @@ export default defineComponent({
 
     const handleQuery = (params: any) => {
       loading.value = true
+
       axios.get("/books", {
         params: {
           page: params.page,
-          size: params.size
+          size: params.size,
+          name: searchParam.value.name
         }
       }).then((response) => {
         loading.value = false
@@ -218,7 +233,7 @@ export default defineComponent({
 
     const edit = (record: any) => {
       editorVisible.value = true
-      book.value = record
+      book.value = ObjectUtils.copy(record)
     }
 
     const add = () => {
@@ -241,9 +256,11 @@ export default defineComponent({
       editorVisible,
       editorLoading,
       book,
+      searchParam,
       handleTableChange,
       edit,
       add,
+      handleQuery,
       handleDelete,
       handleEditorOk
     }

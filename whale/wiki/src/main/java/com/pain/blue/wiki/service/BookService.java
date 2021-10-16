@@ -60,7 +60,9 @@ public class BookService {
 
     public void update(Long id, BookUpdateRequest updateRequest) {
         updateRequest.setId(id);
+        log.info("updateRequest: {}", updateRequest);
         Book book = CopyUtils.copy(updateRequest, Book.class);
+        log.info("book: {}", book);
         bookMapper.updateByPrimaryKey(book);
     }
 
