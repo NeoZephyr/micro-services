@@ -37,12 +37,12 @@
                         password="123456">
         </jdbcConnection>
 
-        <!-- 对应生成的 pojo 所在包 -->
-        <javaModelGenerator targetPackage="com.pain.blue.wiki.domain.pojo" targetProject="src/main/java"/>
-
         <javaTypeResolver>
             <property name="forceBigDecimals" value="true"/>
         </javaTypeResolver>
+
+        <!-- 对应生成的 pojo 所在包 -->
+        <javaModelGenerator targetPackage="com.pain.blue.wiki.domain.pojo" targetProject="src/main/java"/>
 
         <!-- 对应生成的 mapper 所在目录 -->
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
@@ -52,6 +52,7 @@
                              type="XMLMAPPER"/>
 
         <!-- 数据库表 -->
-        <table tableName="book" />
+<!--        <table tableName="book" />-->
+        <table tableName="category" />
     </context>
 </generatorConfiguration>

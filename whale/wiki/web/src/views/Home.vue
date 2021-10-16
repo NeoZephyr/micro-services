@@ -88,7 +88,6 @@ export default defineComponent({
           size: 100
         }
       }).then((response) => {
-        console.log("responseData:", response.data)
         const result: any = response.data
         const data: any = result.data
         books.value = data.rows

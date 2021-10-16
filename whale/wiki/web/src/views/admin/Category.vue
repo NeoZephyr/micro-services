@@ -21,14 +21,11 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="books"
+          :data-source="categories"
           :pagination="pagination"
           :loading="loading"
           @change="handleTableChange"
       >
-        <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar">
-        </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
             <a-button type="primary" @click="edit(record)">
@@ -51,26 +48,20 @@
   </a-layout>
 
   <a-modal
-      title="编辑书本"
+      title="编辑分类"
       v-model:visible="editorVisible"
       :confirm-loading="editorLoading"
       @ok="handleEditorOk"
   >
-    <a-form :model="book" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-      <a-form-item label="封面">
-        <a-input v-model:value="book.cover" />
-      </a-form-item>
+    <a-form :model="category" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
       <a-form-item label="名称">
-        <a-input v-model:value="book.name" />
+        <a-input v-model:value="category.name" />
       </a-form-item>
-      <a-form-item label="分类">
-        <a-input v-model:value="book.categoryId" />
+      <a-form-item label="父分类">
+        <a-input v-model:value="category.parent" />
       </a-form-item>
-      <a-form-item label="子分类">
-        <a-input v-model:value="book.subCategoryId" />
-      </a-form-item>
-      <a-form-item label="描述">
-        <a-input v-model:value="book.description" type="textarea" />
+      <a-form-item label="顺序">
+        <a-input v-model:value="category.sort" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -90,9 +81,9 @@ import { message } from 'ant-design-vue';
 import {ObjectUtils} from "@/util/ObjectUtils";
 
 export default defineComponent({
-  name: 'Book',
+  name: 'Category',
   setup() {
-    const books = ref()
+    const categories = ref()
     const pagination = ref({
       current: 1,
       pageSize: 10,
@@ -102,41 +93,23 @@ export default defineComponent({
     searchParam.value = {}
     const loading = ref(false)
 
-    const book = ref({})
+    const category = ref({})
     const editorVisible = ref(false)
     const editorLoading = ref(false)
 
     const columns = [
       {
-        title: "封面",
-        dataIndex: "cover",
-        slots: { customRender: "cover" }
-      },
-      {
         title: "名称",
         dataIndex: "name"
       },
       {
-        title: "分类",
-        key: "categoryId",
-        dataIndex: "categoryId"
+        title: "父分类",
+        key: "parent",
+        dataIndex: "parent"
       },
       {
-        title: "子分类",
-        key: "subCategoryId",
-        dataIndex: "subCategoryId"
-      },
-      {
-        title: "文档数",
-        dataIndex: "docCount"
-      },
-      {
-        title: "阅读数",
-        dataIndex: "viewCount"
-      },
-      {
-        title: "点赞数",
-        dataIndex: "voteCount"
+        title: "顺序",
+        dataIndex: "sort"
       },
       {
         title: "Action",
@@ -148,7 +121,7 @@ export default defineComponent({
     const handleQuery = (params: any) => {
       loading.value = true
 
-      axios.get("/books", {
+      axios.get("/categories", {
         params: {
           page: params.page,
           size: params.size,
@@ -160,7 +133,7 @@ export default defineComponent({
         const data: any = result.data
 
         if (result.success) {
-          books.value = data.rows
+          categories.value = data.rows
           pagination.value.current = params.page
           pagination.value.total = data.total
         } else {
@@ -170,7 +143,6 @@ export default defineComponent({
     }
 
     const handleTableChange = (pagination: any) => {
-      console.log("pagination:" + pagination)
       handleQuery({
         page: pagination.current,
         size: pagination.pageSize
@@ -179,10 +151,10 @@ export default defineComponent({
 
     const handleEditorOk = () => {
       editorLoading.value = true
-      const bookInstance: any = book.value
+      const categoryInstance: any = category.value
 
-      if (bookInstance.id) {
-        axios.put("/books/" + bookInstance.id, book.value).then((response) => {
+      if (categoryInstance.id) {
+        axios.put("/categories/" + categoryInstance.id, category.value).then((response) => {
           const data: any = response.data
           editorLoading.value = false
 
@@ -198,7 +170,7 @@ export default defineComponent({
           }
         })
       } else {
-        axios.post("/books", book.value).then((response) => {
+        axios.post("/categories", category.value).then((response) => {
           const data: any = response.data
           editorLoading.value = false
 
@@ -217,7 +189,7 @@ export default defineComponent({
     }
 
     const handleDelete = (id: number) => {
-      axios.delete("/books/" + id).then((response) => {
+      axios.delete("/categories/" + id).then((response) => {
         const data: any = response.data
 
         if (data.success) {
@@ -233,12 +205,12 @@ export default defineComponent({
 
     const edit = (record: any) => {
       editorVisible.value = true
-      book.value = ObjectUtils.copy(record)
+      category.value = ObjectUtils.copy(record)
     }
 
     const add = () => {
       editorVisible.value = true
-      book.value = {}
+      category.value = {}
     }
 
     onMounted(() => {
@@ -249,13 +221,13 @@ export default defineComponent({
     })
 
     return {
-      books,
+      categories,
       pagination,
       columns,
       loading,
       editorVisible,
       editorLoading,
-      book,
+      category,
       searchParam,
       handleTableChange,
       edit,

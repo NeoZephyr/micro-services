@@ -1,4 +1,4 @@
-package com.pain.blue.wiki.request;
+package com.pain.blue.wiki.request.book;
 
 import lombok.ToString;
 

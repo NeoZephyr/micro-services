@@ -1,4 +1,6 @@
-package com.pain.blue.wiki.request;
+package com.pain.blue.wiki.request.book;
+
+import com.pain.blue.wiki.request.PageRequest;
 
 public class BookIndexRequest extends PageRequest {
     private Long id;

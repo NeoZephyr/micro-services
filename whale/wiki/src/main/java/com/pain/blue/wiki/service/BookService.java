@@ -9,9 +9,9 @@ import com.pain.blue.wiki.domain.dto.BookDTO;
 import com.pain.blue.wiki.domain.pojo.Book;
 import com.pain.blue.wiki.domain.pojo.BookExample;
 import com.pain.blue.wiki.mapper.BookMapper;
-import com.pain.blue.wiki.request.BookIndexRequest;
-import com.pain.blue.wiki.request.BookSaveRequest;
-import com.pain.blue.wiki.request.BookUpdateRequest;
+import com.pain.blue.wiki.request.book.BookIndexRequest;
+import com.pain.blue.wiki.request.book.BookSaveRequest;
+import com.pain.blue.wiki.request.book.BookUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,6 @@ public class BookService {
     private final IdGenerator idGenerator;
 
     public PageResult<BookDTO> index(BookIndexRequest query) {
-        log.info("query: " + query);
         BookExample example = new BookExample();
         BookExample.Criteria criteria = example.createCriteria();
 
