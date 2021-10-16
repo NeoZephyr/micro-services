@@ -16,8 +16,10 @@ public class BookDTO {
 
     private String name;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long categoryId;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long subCategoryId;
 
     private String description;

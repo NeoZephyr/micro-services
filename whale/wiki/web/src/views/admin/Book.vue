@@ -29,6 +29,9 @@
         <template #cover="{ text: cover }">
           <img v-if="cover" :src="cover" alt="avatar">
         </template>
+        <template v-slot:category="{ text, record }">
+          <span>{{ getCategoryName(record.categoryId) }} / {{ getCategoryName(record.subCategoryId) }}</span>
+        </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
             <a-button type="primary" @click="edit(record)">
@@ -64,10 +67,10 @@
         <a-input v-model:value="book.name" />
       </a-form-item>
       <a-form-item label="分类">
-        <a-input v-model:value="book.categoryId" />
-      </a-form-item>
-      <a-form-item label="子分类">
-        <a-input v-model:value="book.subCategoryId" />
+        <a-cascader
+            v-model:value="categoryIds"
+            :options="tree"
+            :field-names="{ label: 'name', value: 'id', children: 'children' }" />
       </a-form-item>
       <a-form-item label="描述">
         <a-input v-model:value="book.description" type="textarea" />
@@ -92,6 +95,10 @@ import {ObjectUtils} from "@/util/ObjectUtils";
 export default defineComponent({
   name: 'Book',
   setup() {
+    const tree = ref()
+    let categories: any
+    tree.value = []
+    const categoryIds = ref()
     const books = ref()
     const pagination = ref({
       current: 1,
@@ -102,7 +109,7 @@ export default defineComponent({
     searchParam.value = {}
     const loading = ref(false)
 
-    const book = ref({})
+    const book = ref()
     const editorVisible = ref(false)
     const editorLoading = ref(false)
 
@@ -118,13 +125,7 @@ export default defineComponent({
       },
       {
         title: "分类",
-        key: "categoryId",
-        dataIndex: "categoryId"
-      },
-      {
-        title: "子分类",
-        key: "subCategoryId",
-        dataIndex: "subCategoryId"
+        slots: { customRender: "category" }
       },
       {
         title: "文档数",
@@ -170,7 +171,6 @@ export default defineComponent({
     }
 
     const handleTableChange = (pagination: any) => {
-      console.log("pagination:" + pagination)
       handleQuery({
         page: pagination.current,
         size: pagination.pageSize
@@ -179,6 +179,8 @@ export default defineComponent({
 
     const handleEditorOk = () => {
       editorLoading.value = true
+      book.value.categoryId = categoryIds.value[0]
+      book.value.subCategoryId = categoryIds.value[1]
       const bookInstance: any = book.value
 
       if (bookInstance.id) {
@@ -231,17 +233,48 @@ export default defineComponent({
       })
     }
 
+    const handleQueryCategory = () => {
+      loading.value = true
+
+      axios.get("/categories").then((response) => {
+        loading.value = false
+        const result: any = response.data
+
+        if (result.success) {
+          categories = result.data
+          tree.value = ObjectUtils.arrayToTree(categories, 0)
+        } else {
+          message.error(result.msg)
+        }
+      })
+    }
+
+    const getCategoryName = (categoryId: number) => {
+      let categoryName = ""
+
+      categories.forEach((item: any) => {
+        if (categoryId == item.id) {
+          categoryName = item.name
+        }
+      })
+
+      return categoryName
+    }
+
     const edit = (record: any) => {
       editorVisible.value = true
       book.value = ObjectUtils.copy(record)
+      categoryIds.value = [book.value.categoryId, book.value.subCategoryId]
     }
 
     const add = () => {
       editorVisible.value = true
       book.value = {}
+      categoryIds.value = []
     }
 
     onMounted(() => {
+      handleQueryCategory()
       handleQuery({
         page: 1,
         size: pagination.value.pageSize
@@ -249,6 +282,8 @@ export default defineComponent({
     })
 
     return {
+      categoryIds,
+      tree,
       books,
       pagination,
       columns,
@@ -262,7 +297,8 @@ export default defineComponent({
       add,
       handleQuery,
       handleDelete,
-      handleEditorOk
+      handleEditorOk,
+      getCategoryName
     }
   }
 });
