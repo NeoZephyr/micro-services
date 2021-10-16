@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/categories")
@@ -20,8 +21,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("")
-    public RestResponse index(@Valid CategoryIndexRequest query) {
-        PageResult<CategoryDTO> result = categoryService.index(query);
+    public RestResponse index() {
+        List<CategoryDTO> result = categoryService.index();
         return RestResponse.success(result);
     }
 

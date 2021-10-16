@@ -18,4 +18,27 @@ export class ObjectUtils {
             return {}
         }
     }
+
+    public static arrayToTree(array: any, parentId: number) {
+        if (this.isEmpty(array)) {
+            return []
+        }
+
+        const tree = []
+
+        for (let i = 0; i < array.length; i++) {
+            const item = array[i]
+
+            if (Number(item.parent) === Number(parentId)) {
+                tree.push(item)
+                const children = this.arrayToTree(array, item.id)
+
+                if (this.isNotEmpty(children)) {
+                    item.children = children
+                }
+            }
+        }
+
+        return tree
+    }
 }

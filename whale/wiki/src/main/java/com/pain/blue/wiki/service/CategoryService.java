@@ -27,25 +27,11 @@ public class CategoryService {
     private final CategoryMapper categoryMapper;
     private final IdGenerator idGenerator;
 
-    public PageResult<CategoryDTO> index(CategoryIndexRequest query) {
+    public List<CategoryDTO> index() {
         CategoryExample example = new CategoryExample();
-        CategoryExample.Criteria criteria = example.createCriteria();
-
-        if (!StringUtils.isBlank(query.getName())) {
-            criteria.andNameLike("%" + query.getName() + "%");
-        }
-
-        PageHelper.startPage(query.getPage(), query.getSize());
+        example.setOrderByClause("sort asc");
         List<Category> categories = categoryMapper.selectByExample(example);
-        PageInfo<Category> pageInfo = new PageInfo<>(categories);
-
-        List<CategoryDTO> categoryDTOList = CopyUtils.copy(categories, CategoryDTO.class);
-        PageResult<CategoryDTO> pageResult = new PageResult<>();
-        pageResult.setTotal(pageInfo.getTotal());
-        pageResult.setPage(pageInfo.getPages());
-        pageResult.setRows(categoryDTOList);
-
-        return pageResult;
+        return CopyUtils.copy(categories, CategoryDTO.class);
     }
 
     public void save(CategorySaveRequest saveRequest) {

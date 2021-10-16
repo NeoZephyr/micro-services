@@ -164,7 +164,7 @@ export default defineComponent({
           pagination.value.current = params.page
           pagination.value.total = data.total
         } else {
-          message.error(data.msg)
+          message.error(result.msg)
         }
       })
     }

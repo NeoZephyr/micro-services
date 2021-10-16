@@ -8,7 +8,7 @@
           <a-input v-model:value="searchParam.name" placeholder="名称" />
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+          <a-button type="primary" @click="handleQuery()">
             查询
           </a-button>
         </a-form-item>
@@ -21,10 +21,9 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categories"
-          :pagination="pagination"
+          :data-source="tree"
+          :pagination=false
           :loading="loading"
-          @change="handleTableChange"
       >
         <template v-slot:action="{ text, record }">
           <a-space size="small">
@@ -58,7 +57,17 @@
         <a-input v-model:value="category.name" />
       </a-form-item>
       <a-form-item label="父分类">
-        <a-input v-model:value="category.parent" />
+        <a-select
+            ref="select"
+            v-model:value="category.parent"
+        >
+          <a-select-option value="0">
+            无
+          </a-select-option>
+          <a-select-option v-for="c in tree" :key="c.id" :value="c.id" :disabled="category.id === c.id">
+            {{c.name}}
+          </a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item label="顺序">
         <a-input v-model:value="category.sort" />
@@ -83,12 +92,9 @@ import {ObjectUtils} from "@/util/ObjectUtils";
 export default defineComponent({
   name: 'Category',
   setup() {
+    const tree = ref()
+    tree.value = []
     const categories = ref()
-    const pagination = ref({
-      current: 1,
-      pageSize: 10,
-      total: 0
-    })
     const searchParam = ref()
     searchParam.value = {}
     const loading = ref(false)
@@ -118,34 +124,19 @@ export default defineComponent({
       }
     ]
 
-    const handleQuery = (params: any) => {
+    const handleQuery = () => {
       loading.value = true
 
-      axios.get("/categories", {
-        params: {
-          page: params.page,
-          size: params.size,
-          name: searchParam.value.name
-        }
-      }).then((response) => {
+      axios.get("/categories").then((response) => {
         loading.value = false
         const result: any = response.data
-        const data: any = result.data
 
         if (result.success) {
-          categories.value = data.rows
-          pagination.value.current = params.page
-          pagination.value.total = data.total
+          categories.value = result.data
+          tree.value = ObjectUtils.arrayToTree(categories.value, 0)
         } else {
-          message.error(data.msg)
+          message.error(result.msg)
         }
-      })
-    }
-
-    const handleTableChange = (pagination: any) => {
-      handleQuery({
-        page: pagination.current,
-        size: pagination.pageSize
       })
     }
 
@@ -161,10 +152,7 @@ export default defineComponent({
           if (data.success) {
             editorVisible.value = false
 
-            handleQuery({
-              page: pagination.value.current,
-              size: pagination.value.pageSize
-            })
+            handleQuery()
           } else {
             message.error(data.msg)
           }
@@ -177,10 +165,7 @@ export default defineComponent({
           if (data.success) {
             editorVisible.value = false
 
-            handleQuery({
-              page: pagination.value.current,
-              size: pagination.value.pageSize
-            })
+            handleQuery()
           } else {
             message.error(data.msg)
           }
@@ -193,10 +178,7 @@ export default defineComponent({
         const data: any = response.data
 
         if (data.success) {
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize
-          })
+          handleQuery()
         } else {
           message.error(data.msg);
         }
@@ -214,22 +196,17 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      })
+      handleQuery()
     })
 
     return {
-      categories,
-      pagination,
+      tree,
       columns,
       loading,
       editorVisible,
       editorLoading,
       category,
       searchParam,
-      handleTableChange,
       edit,
       add,
       handleQuery,
