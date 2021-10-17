@@ -4,13 +4,11 @@
       <a-menu
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
-          :openKeys="openKeys"
+          @click="handleClick"
       >
         <a-menu-item key="welcome">
-          <router-link :to="'/'">
-            <MailOutlined />
-            <span>欢迎</span>
-          </router-link>
+          <MailOutlined />
+          <span>欢迎</span>
         </a-menu-item>
         <a-sub-menu v-for="item in tree" :key="item.id">
           <template v-slot:title>
@@ -31,7 +29,10 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="books">
+      <div class="welcome" v-show="showWelcome">
+        欢迎光临
+      </div>
+      <a-list v-show="!showWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="books">
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
@@ -68,6 +69,8 @@ export default defineComponent({
     let categories: any
     tree.value = []
     const books = ref()
+    const showWelcome = ref(true)
+    let categoryId = 0
 
     const handleQueryCategory = () => {
       axios.get("/categories").then((response) => {
@@ -82,23 +85,39 @@ export default defineComponent({
       })
     }
 
-    onMounted(() => {
-      handleQueryCategory()
+    const handleQueryBook = () => {
       axios.get("/books", {
         params: {
           page: 1,
-          size: 100
+          size: 100,
+          subCategoryId: categoryId
         }
       }).then((response) => {
         const result: any = response.data
         const data: any = result.data
         books.value = data.rows
       })
+    }
+
+    const handleClick = (e: any) => {
+      if (e.key === "welcome") {
+        showWelcome.value = true
+      } else {
+        showWelcome.value = false
+        categoryId = e.key
+        handleQueryBook()
+      }
+    }
+
+    onMounted(() => {
+      handleQueryCategory()
     })
 
     return {
       tree,
       books,
+      showWelcome,
+      handleClick,
       actions: [
         {type: 'StarOutlined', text: '156'},
         {type: 'LikeOutlined', text: '156'},

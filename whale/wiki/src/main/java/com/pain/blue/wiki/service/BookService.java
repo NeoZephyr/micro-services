@@ -39,6 +39,10 @@ public class BookService {
             criteria.andCategoryIdEqualTo(query.getCategoryId());
         }
 
+        if (query.getSubCategoryId() != null) {
+            criteria.andSubCategoryIdEqualTo(query.getSubCategoryId());
+        }
+
         PageHelper.startPage(query.getPage(), query.getSize());
         List<Book> books = bookMapper.selectByExample(example);
         PageInfo<Book> pageInfo = new PageInfo<>(books);
