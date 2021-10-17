@@ -3,45 +3,28 @@
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
           mode="inline"
-          v-model:selectedKeys="selectedKeys2"
-          v-model:openKeys="openKeys"
           :style="{ height: '100%', borderRight: 0 }"
+          :openKeys="openKeys"
       >
-        <a-sub-menu key="sub1">
-          <template #title>
+        <a-menu-item key="welcome">
+          <router-link :to="'/'">
+            <MailOutlined />
+            <span>欢迎</span>
+          </router-link>
+        </a-menu-item>
+        <a-sub-menu v-for="item in tree" :key="item.id">
+          <template v-slot:title>
               <span>
-                <user-outlined/>
-                subNav 1
+                <user-outlined />
+                {{item.name}}
               </span>
           </template>
-          <a-menu-item key="1">option1</a-menu-item>
-          <a-menu-item key="2">option2</a-menu-item>
-          <a-menu-item key="3">option3</a-menu-item>
-          <a-menu-item key="4">option4</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub2">
-          <template #title>
-              <span>
-                <laptop-outlined/>
-                subnav 2
-              </span>
-          </template>
-          <a-menu-item key="5">option5</a-menu-item>
-          <a-menu-item key="6">option6</a-menu-item>
-          <a-menu-item key="7">option7</a-menu-item>
-          <a-menu-item key="8">option8</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub3">
-          <template #title>
-              <span>
-                <notification-outlined/>
-                subnav 3
-              </span>
-          </template>
-          <a-menu-item key="9">option9</a-menu-item>
-          <a-menu-item key="10">option10</a-menu-item>
-          <a-menu-item key="11">option11</a-menu-item>
-          <a-menu-item key="12">option12</a-menu-item>
+          <a-menu-item v-for="child in item.children" :key="child.id">
+            <MailOutlined />
+            <span>
+              {{child.name}}
+            </span>
+          </a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
@@ -75,13 +58,32 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from "axios";
+import {ObjectUtils} from "@/util/ObjectUtils";
+import {message} from "ant-design-vue";
 
 export default defineComponent({
   name: 'Home',
   setup() {
+    const tree = ref()
+    let categories: any
+    tree.value = []
     const books = ref()
 
+    const handleQueryCategory = () => {
+      axios.get("/categories").then((response) => {
+        const result: any = response.data
+
+        if (result.success) {
+          categories = result.data
+          tree.value = ObjectUtils.arrayToTree(categories, 0)
+        } else {
+          message.error(result.msg)
+        }
+      })
+    }
+
     onMounted(() => {
+      handleQueryCategory()
       axios.get("/books", {
         params: {
           page: 1,
@@ -95,6 +97,7 @@ export default defineComponent({
     })
 
     return {
+      tree,
       books,
       actions: [
         {type: 'StarOutlined', text: '156'},

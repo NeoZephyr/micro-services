@@ -243,6 +243,12 @@ export default defineComponent({
         if (result.success) {
           categories = result.data
           tree.value = ObjectUtils.arrayToTree(categories, 0)
+
+          // 加载成功分类之后再去加载书
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize
+          })
         } else {
           message.error(result.msg)
         }
@@ -275,10 +281,6 @@ export default defineComponent({
 
     onMounted(() => {
       handleQueryCategory()
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      })
     })
 
     return {
