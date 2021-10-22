@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pain.blue.shopping.mapper.ActivityInfoMapper">
+  <resultMap id="BaseResultMap" type="com.pain.blue.shopping.domain.pojo.ActivityInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="activity_name" jdbcType="VARCHAR" property="activityName" />
+    <result column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="date_start" jdbcType="TIMESTAMP" property="dateStart" />
+    <result column="date_end" jdbcType="TIMESTAMP" property="dateEnd" />
+    <result column="limit_num" jdbcType="INTEGER" property="limitNum" />
+    <result column="stock_num" jdbcType="INTEGER" property="stockNum" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="product_url" jdbcType="VARCHAR" property="productUrl" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
+    <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, activity_name, product_id, date_start, date_end, limit_num, stock_num, `status`,
+    product_url, price, date_created, last_updated
+  </sql>
+  <select id="selectByExample" parameterType="com.pain.blue.shopping.domain.pojo.ActivityInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from activity_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from activity_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectOpenedByProductId" parameterType="map"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from activity_info
+    where product_id = #{product_id,jdbcType=VARCHAR} and (status = 0 OR status = 1)
+  </select>
+  <update id="updateStatus" parameterType="map">
+    update activity_info set status = #{status}
+    where id = #{id}
+  </update>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from activity_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.pain.blue.shopping.domain.pojo.ActivityInfoExample">
+    delete from activity_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.pain.blue.shopping.domain.pojo.ActivityInfo">
+    insert into activity_info (id, activity_name, product_id,
+      date_start, date_end, limit_num,
+      stock_num, `status`, product_url,
+      price, date_created, last_updated
+      )
+    values (#{id,jdbcType=BIGINT}, #{activityName,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR},
+      #{dateStart,jdbcType=TIMESTAMP}, #{dateEnd,jdbcType=TIMESTAMP}, #{limitNum,jdbcType=INTEGER},
+      #{stockNum,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{productUrl,jdbcType=VARCHAR},
+      #{price,jdbcType=DECIMAL}, #{dateCreated,jdbcType=TIMESTAMP}, #{lastUpdated,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pain.blue.shopping.domain.pojo.ActivityInfo">
+    insert into activity_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="activityName != null">
+        activity_name,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="dateStart != null">
+        date_start,
+      </if>
+      <if test="dateEnd != null">
+        date_end,
+      </if>
+      <if test="limitNum != null">
+        limit_num,
+      </if>
+      <if test="stockNum != null">
+        stock_num,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="productUrl != null">
+        product_url,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="dateCreated != null">
+        date_created,
+      </if>
+      <if test="lastUpdated != null">
+        last_updated,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="activityName != null">
+        #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="dateStart != null">
+        #{dateStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dateEnd != null">
+        #{dateEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="limitNum != null">
+        #{limitNum,jdbcType=INTEGER},
+      </if>
+      <if test="stockNum != null">
+        #{stockNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="productUrl != null">
+        #{productUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="dateCreated != null">
+        #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdated != null">
+        #{lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.pain.blue.shopping.domain.pojo.ActivityInfoExample" resultType="java.lang.Long">
+    select count(*) from activity_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update activity_info
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.activityName != null">
+        activity_name = #{record.activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productId != null">
+        product_id = #{record.productId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dateStart != null">
+        date_start = #{record.dateStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dateEnd != null">
+        date_end = #{record.dateEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.limitNum != null">
+        limit_num = #{record.limitNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.stockNum != null">
+        stock_num = #{record.stockNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.productUrl != null">
+        product_url = #{record.productUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null">
+        price = #{record.price,jdbcType=DECIMAL},
+      </if>
+      <if test="record.dateCreated != null">
+        date_created = #{record.dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastUpdated != null">
+        last_updated = #{record.lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update activity_info
+    set id = #{record.id,jdbcType=BIGINT},
+      activity_name = #{record.activityName,jdbcType=VARCHAR},
+      product_id = #{record.productId,jdbcType=VARCHAR},
+      date_start = #{record.dateStart,jdbcType=TIMESTAMP},
+      date_end = #{record.dateEnd,jdbcType=TIMESTAMP},
+      limit_num = #{record.limitNum,jdbcType=INTEGER},
+      stock_num = #{record.stockNum,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
+      product_url = #{record.productUrl,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DECIMAL},
+      date_created = #{record.dateCreated,jdbcType=TIMESTAMP},
+      last_updated = #{record.lastUpdated,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pain.blue.shopping.domain.pojo.ActivityInfo">
+    update activity_info
+    <set>
+      <if test="activityName != null">
+        activity_name = #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="dateStart != null">
+        date_start = #{dateStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dateEnd != null">
+        date_end = #{dateEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="limitNum != null">
+        limit_num = #{limitNum,jdbcType=INTEGER},
+      </if>
+      <if test="stockNum != null">
+        stock_num = #{stockNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="productUrl != null">
+        product_url = #{productUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="dateCreated != null">
+        date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdated != null">
+        last_updated = #{lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pain.blue.shopping.domain.pojo.ActivityInfo">
+    update activity_info
+    set activity_name = #{activityName,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=VARCHAR},
+      date_start = #{dateStart,jdbcType=TIMESTAMP},
+      date_end = #{dateEnd,jdbcType=TIMESTAMP},
+      limit_num = #{limitNum,jdbcType=INTEGER},
+      stock_num = #{stockNum,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
+      product_url = #{productUrl,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      last_updated = #{lastUpdated,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

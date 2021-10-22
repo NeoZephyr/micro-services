@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--
+    1. MyBatis3: 带 example
+    2. MyBatis3Simple: 不带 example
+    -->
+    <context id="MysqlContext" targetRuntime="MyBatis3" defaultModelType="flat">
+
+        <!-- 自动检查关键字，为关键字增加反引号 -->
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!-- 覆盖生成 XML 文件 -->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
+
+        <!-- 生成的实体类添加 toString() 方法 -->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+
+        <!-- 不生成注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://cdh:3306/shopping"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+
+        <!-- 对应生成的 pojo 所在包 -->
+        <javaModelGenerator targetPackage="com.pain.blue.shopping.domain.pojo" targetProject="src/main/java"/>
+
+        <!-- 对应生成的 mapper 所在目录 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+
+        <!-- 配置 mapper 对应的 java 映射 -->
+        <javaClientGenerator targetPackage="com.pain.blue.shopping.mapper" targetProject="src/main/java"
+                             type="XMLMAPPER"/>
+
+        <!-- 数据库表 -->
+<!--        <table tableName="product_info">-->
+<!--            <columnOverride column="tag" javaType="Integer" />-->
+<!--        </table>-->
+        <table tableName="activity_info" />
+    </context>
+</generatorConfiguration>

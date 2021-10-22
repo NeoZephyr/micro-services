@@ -11,6 +11,8 @@
         <module>common</module>
         <module>eureka</module>
         <module>provider</module>
+        <module>seckill-shopping</module>
+        <module>seckill-support</module>
     </modules>
     <packaging>pom</packaging>
     <name>whale</name>
