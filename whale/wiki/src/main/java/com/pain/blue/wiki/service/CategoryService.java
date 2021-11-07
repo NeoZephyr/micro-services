@@ -1,20 +1,15 @@
 package com.pain.blue.wiki.service;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.pain.blue.id.IdGenerator;
 import com.pain.blue.mapping.CopyUtils;
-import com.pain.blue.rest.response.PageResult;
 import com.pain.blue.wiki.domain.dto.CategoryDTO;
 import com.pain.blue.wiki.domain.pojo.Category;
 import com.pain.blue.wiki.domain.pojo.CategoryExample;
 import com.pain.blue.wiki.mapper.CategoryMapper;
-import com.pain.blue.wiki.request.category.CategoryIndexRequest;
 import com.pain.blue.wiki.request.category.CategorySaveRequest;
 import com.pain.blue.wiki.request.category.CategoryUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

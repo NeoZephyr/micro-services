@@ -53,6 +53,7 @@
 
         <!-- 数据库表 -->
 <!--        <table tableName="book" />-->
-        <table tableName="category" />
+<!--        <table tableName="category" />-->
+        <table tableName="document" />
     </context>
 </generatorConfiguration>

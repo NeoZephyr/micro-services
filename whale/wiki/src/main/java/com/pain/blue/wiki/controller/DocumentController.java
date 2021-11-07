@@ -2,9 +2,12 @@ package com.pain.blue.wiki.controller;
 
 import com.pain.blue.rest.response.RestResponse;
 import com.pain.blue.wiki.domain.dto.CategoryDTO;
+import com.pain.blue.wiki.domain.dto.DocumentDTO;
 import com.pain.blue.wiki.request.category.CategorySaveRequest;
 import com.pain.blue.wiki.request.category.CategoryUpdateRequest;
-import com.pain.blue.wiki.service.CategoryService;
+import com.pain.blue.wiki.request.document.DocumentSaveRequest;
+import com.pain.blue.wiki.request.document.DocumentUpdateRequest;
+import com.pain.blue.wiki.service.DocumentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,33 +15,33 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/categories")
+@RequestMapping("/documents")
 @RestController
-public class CategoryController {
+public class DocumentController {
 
-    private final CategoryService categoryService;
+    private final DocumentService documentService;
 
     @GetMapping("")
     public RestResponse index() {
-        List<CategoryDTO> result = categoryService.index();
+        List<DocumentDTO> result = documentService.index();
         return RestResponse.success(result);
     }
 
     @PostMapping("")
-    public RestResponse save(@Valid @RequestBody CategorySaveRequest saveRequest) {
-        categoryService.save(saveRequest);
+    public RestResponse save(@Valid @RequestBody DocumentSaveRequest saveRequest) {
+        documentService.save(saveRequest);
         return RestResponse.success();
     }
 
     @PutMapping("/{id}")
-    public RestResponse update(@PathVariable Long id, @Valid @RequestBody CategoryUpdateRequest updateRequest) {
-        categoryService.update(id, updateRequest);
+    public RestResponse update(@PathVariable Long id, @Valid @RequestBody DocumentUpdateRequest updateRequest) {
+        documentService.update(id, updateRequest);
         return RestResponse.success();
     }
 
     @DeleteMapping("/{id}")
     public RestResponse delete(@PathVariable Long id) {
-        categoryService.delete(id);
+        documentService.delete(id);
         return RestResponse.success();
     }
 }
