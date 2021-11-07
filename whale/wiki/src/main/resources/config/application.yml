@@ -3,7 +3,7 @@ server:
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://cdh:3306/wiki?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
     username: root
     password: 123456

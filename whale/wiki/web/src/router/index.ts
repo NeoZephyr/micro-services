@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import AdminBook from '../views/admin/Book.vue'
 import AdminCategory from '../views/admin/Category.vue'
+import AdminDocument from '../views/admin/Document.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -28,6 +29,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/admin/category',
     name: 'AdminCategory',
     component: AdminCategory
+  },
+  {
+    path: '/admin/document',
+    name: 'AdminDocument',
+    component: AdminDocument
   }
 ]
 
