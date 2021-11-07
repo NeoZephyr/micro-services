@@ -1,6 +1,6 @@
-package com.pain.yellow.app.exception;
+package com.pain.blue.exception;
 
-import com.pain.yellow.response.ResponseStatus;
+import com.pain.blue.rest.response.ResponseStatus;
 
 public class RestException extends RuntimeException {
     private ResponseStatus responseStatus;
