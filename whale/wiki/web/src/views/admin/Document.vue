@@ -170,7 +170,7 @@ export default defineComponent({
       loading.value = true
       // tree.value = []
 
-      axios.get("/documents").then((response) => {
+      axios.get("/documents?bookId=" + (route.query.bookId)).then((response) => {
         loading.value = false
         const result: any = response.data
 

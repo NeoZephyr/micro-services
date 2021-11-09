@@ -22,8 +22,8 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @GetMapping("")
-    public RestResponse index() {
-        List<DocumentDTO> result = documentService.index();
+    public RestResponse index(@RequestParam("bookId") long bookId) {
+        List<DocumentDTO> result = documentService.index(bookId);
         return RestResponse.success(result);
     }
 
