@@ -87,10 +87,12 @@ import {defineComponent, onMounted, ref} from 'vue';
 import axios from "axios";
 import { message } from 'ant-design-vue';
 import {ObjectUtils} from "@/util/ObjectUtils";
+import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: 'Document',
   setup() {
+    const route = useRoute()
     const tree = ref()
     tree.value = []
     const documents = ref()
@@ -236,7 +238,9 @@ export default defineComponent({
 
     const add = () => {
       editorVisible.value = true
-      doc.value = {}
+      doc.value = {
+        bookId: route.query.bookId
+      }
       selectTree.value = ObjectUtils.copy(tree.value)
       selectTree.value.unshift({id: 0, name: "无"})
     }
