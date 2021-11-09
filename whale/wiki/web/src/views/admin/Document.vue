@@ -57,17 +57,16 @@
         <a-input v-model:value="doc.name" />
       </a-form-item>
       <a-form-item label="父文档">
-        <a-select
-            ref="select"
+        <a-tree-select
             v-model:value="doc.parent"
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            :tree-data="selectTree"
+            placeholder="请选择"
+            tree-default-expand-all
+            :replaceFields="{title: 'name', key: 'id', value: 'id'}"
         >
-          <a-select-option value="0">
-            无
-          </a-select-option>
-          <a-select-option v-for="c in tree" :key="c.id" :value="c.id" :disabled="doc.id === c.id">
-            {{c.name}}
-          </a-select-option>
-        </a-select>
+        </a-tree-select>
       </a-form-item>
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort" />
@@ -99,6 +98,8 @@ export default defineComponent({
     searchParam.value = {}
     const loading = ref(false)
 
+    const selectTree = ref()
+    selectTree.value = []
     const doc = ref({})
     const editorVisible = ref(false)
     const editorLoading = ref(false)
@@ -124,8 +125,48 @@ export default defineComponent({
       }
     ]
 
+    const findRoot = (roots: any, id: any) : any => {
+      for (let i = 0; i < roots.length; i++) {
+        if (roots[i].id === id) {
+          return roots[i]
+        }
+
+        const children = roots[i].children
+
+        if (ObjectUtils.isNotEmpty(children)) {
+          const root = findRoot(children, id)
+
+          if (root != null) {
+            return root
+          }
+        }
+      }
+
+      return null
+    }
+
+    const disableTree = (root: any) => {
+      root.disabled = true
+      const children = root.children
+
+      if (ObjectUtils.isNotEmpty(children)) {
+        for (let i = 0; i < children.length; i++) {
+          disableTree(children[i])
+        }
+      }
+    }
+
+    const setDisable = (roots: any, id: any) => {
+      const root = findRoot(roots, id)
+
+      if (root != null) {
+        disableTree(root)
+      }
+    }
+
     const handleQuery = () => {
       loading.value = true
+      // tree.value = []
 
       axios.get("/documents").then((response) => {
         loading.value = false
@@ -188,11 +229,16 @@ export default defineComponent({
     const edit = (record: any) => {
       editorVisible.value = true
       doc.value = ObjectUtils.copy(record)
+      selectTree.value = ObjectUtils.copy(tree.value)
+      setDisable(selectTree.value, record.id)
+      selectTree.value.unshift({id: 0, name: "无"})
     }
 
     const add = () => {
       editorVisible.value = true
       doc.value = {}
+      selectTree.value = ObjectUtils.copy(tree.value)
+      selectTree.value.unshift({id: 0, name: "无"})
     }
 
     onMounted(() => {
@@ -206,6 +252,7 @@ export default defineComponent({
       editorVisible,
       editorLoading,
       doc,
+      selectTree,
       searchParam,
       edit,
       add,

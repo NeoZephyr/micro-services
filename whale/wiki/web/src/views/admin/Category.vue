@@ -126,6 +126,7 @@ export default defineComponent({
 
     const handleQuery = () => {
       loading.value = true
+      // tree.value = []
 
       axios.get("/categories").then((response) => {
         loading.value = false
