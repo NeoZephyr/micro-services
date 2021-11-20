@@ -85,11 +85,20 @@
               <a-input v-model:value="doc.sort" placeholder="顺序" />
             </a-form-item>
             <a-form-item>
+              <a-button type="primary" @click="handlePreview()">
+                <EyeOutlined /> 内容预览
+              </a-button>
+            </a-form-item>
+            <a-form-item>
               <div id="content"></div>
             </a-form-item>
           </a-form>
         </a-col>
       </a-row>
+
+      <a-drawer width="900" placement="right" :closable="false" :visible="drawerVisible" @close="onDrawerClose">
+        <div class="wangeditor" :innerHTML="previewHtml"></div>
+      </a-drawer>
 
     </a-layout-content>
   </a-layout>
@@ -105,7 +114,7 @@ img {
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from "axios";
-import { message } from 'ant-design-vue';
+import {message} from 'ant-design-vue';
 import {ObjectUtils} from "@/util/ObjectUtils";
 import {useRoute} from "vue-router";
 import E from 'wangeditor';
@@ -127,6 +136,9 @@ export default defineComponent({
     doc.value = {}
     const editorVisible = ref(false)
     const editorLoading = ref(false)
+
+    const drawerVisible = ref(false)
+    const previewHtml = ref()
 
     let editor: E
     // const editor = new E('#content');
@@ -282,6 +294,15 @@ export default defineComponent({
       selectTree.value.unshift({id: 0, name: "无"})
     }
 
+    const handlePreview = () => {
+      previewHtml.value = editor.txt.html()
+      drawerVisible.value = true
+    }
+
+    const onDrawerClose = () => {
+      drawerVisible.value = false
+    }
+
     onMounted(() => {
       handleQuery()
       editor = new E("#content")
@@ -298,11 +319,15 @@ export default defineComponent({
       doc,
       selectTree,
       searchParam,
+      previewHtml,
+      drawerVisible,
       edit,
       add,
       handleQuery,
       handleDelete,
-      handleSave
+      handleSave,
+      handlePreview,
+      onDrawerClose
     }
   }
 });
