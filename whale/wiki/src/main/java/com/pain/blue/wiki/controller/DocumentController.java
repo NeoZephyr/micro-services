@@ -44,4 +44,10 @@ public class DocumentController {
         documentService.delete(id);
         return RestResponse.success();
     }
+
+    @GetMapping("/{id}/content")
+    public RestResponse content(@PathVariable Long id) {
+        String content = documentService.getContent(id);
+        return RestResponse.success(content);
+    }
 }

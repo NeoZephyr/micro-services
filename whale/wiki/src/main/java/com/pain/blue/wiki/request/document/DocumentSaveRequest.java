@@ -19,6 +19,9 @@ public class DocumentSaveRequest {
     @NotNull(message = "父文档不能为空")
     private Long parent;
 
+    @NotNull(message = "内容不能为空")
+    private String content;
+
     private Integer sort;
 
     private Integer viewCount;

@@ -123,7 +123,8 @@ export default defineComponent({
 
     const selectTree = ref()
     selectTree.value = []
-    const doc = ref({})
+    const doc = ref()
+    doc.value = {}
     const editorVisible = ref(false)
     const editorLoading = ref(false)
 
@@ -199,9 +200,22 @@ export default defineComponent({
       })
     }
 
+    const handleQueryContent = () => {
+      axios.get("/documents/" + (doc.value.id) + "/content").then((response) => {
+        const result: any = response.data
+
+        if (result.success) {
+          editor.txt.html(result.data)
+        } else {
+          message.error(result.msg)
+        }
+      })
+    }
+
     const handleSave = () => {
       editorLoading.value = true
       const docInstance: any = doc.value
+      docInstance.content = editor.txt.html()
 
       if (docInstance.id) {
         axios.put("/documents/" + docInstance.id, doc.value).then((response) => {
@@ -210,6 +224,7 @@ export default defineComponent({
 
           if (data.success) {
             editorVisible.value = false
+            message.success("更新成功")
 
             handleQuery()
           } else {
@@ -223,6 +238,7 @@ export default defineComponent({
 
           if (data.success) {
             editorVisible.value = false
+            message.success("新增成功")
 
             handleQuery()
           } else {
@@ -245,14 +261,17 @@ export default defineComponent({
     }
 
     const edit = (record: any) => {
+      editor.txt.html("")
       editorVisible.value = true
       doc.value = ObjectUtils.copy(record)
+      handleQueryContent()
       selectTree.value = ObjectUtils.copy(tree.value)
       setDisable(selectTree.value, record.id)
       selectTree.value.unshift({id: 0, name: "无"})
     }
 
     const add = () => {
+      editor.txt.html("")
       editorVisible.value = true
       doc.value = {
         bookId: route.query.bookId
