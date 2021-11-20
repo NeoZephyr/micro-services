@@ -103,7 +103,7 @@ img {
 </style>
 
 <script lang="ts">
-import {defineComponent, onMounted, onUpdated, ref} from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
 import axios from "axios";
 import { message } from 'ant-design-vue';
 import {ObjectUtils} from "@/util/ObjectUtils";
@@ -111,7 +111,7 @@ import {useRoute} from "vue-router";
 import E from 'wangeditor';
 
 export default defineComponent({
-  name: 'Document',
+  name: 'AdminDocument',
   setup() {
     const route = useRoute()
     const tree = ref()
@@ -194,6 +194,8 @@ export default defineComponent({
         if (result.success) {
           documents.value = result.data
           tree.value = ObjectUtils.arrayToTree(documents.value, 0)
+          selectTree.value = ObjectUtils.copy(tree.value)
+          selectTree.value.unshift({id: 0, name: "无"})
         } else {
           message.error(result.msg)
         }

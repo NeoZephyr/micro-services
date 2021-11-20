@@ -103,7 +103,7 @@ public class DocumentService {
     public String getContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
 
-        if (StringUtils.isBlank(content.getContent())) {
+        if (content == null || StringUtils.isBlank(content.getContent())) {
             return "";
         }
 

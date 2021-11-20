@@ -98,7 +98,7 @@ import { message } from 'ant-design-vue';
 import {ObjectUtils} from "@/util/ObjectUtils";
 
 export default defineComponent({
-  name: 'Book',
+  name: 'AdminBook',
   setup() {
     const tree = ref()
     let categories: any

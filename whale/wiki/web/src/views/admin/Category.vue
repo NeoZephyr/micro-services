@@ -90,7 +90,7 @@ import { message } from 'ant-design-vue';
 import {ObjectUtils} from "@/util/ObjectUtils";
 
 export default defineComponent({
-  name: 'Category',
+  name: 'AdminCategory',
   setup() {
     const tree = ref()
     tree.value = []
