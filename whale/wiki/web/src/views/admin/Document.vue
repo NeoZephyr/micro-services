@@ -133,7 +133,9 @@ export default defineComponent({
     const selectTree = ref()
     selectTree.value = []
     const doc = ref()
-    doc.value = {}
+    doc.value = {
+      bookId: route.query.bookId
+    }
     const editorVisible = ref(false)
     const editorLoading = ref(false)
 

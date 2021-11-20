@@ -3,6 +3,7 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
+      <h3 v-if="tree.length === 0">对不起，还没有找到相关文档！</h3>
       <a-row :gutter="24">
         <a-col :span="6">
           <a-tree
@@ -11,6 +12,7 @@
               @select="onSelect"
               :replaceFields="{title: 'name', key: 'id', value: 'id'}"
               :defaultExpandAll="true"
+              :defaultSelectedKeys="defaultSelectedKeys"
           >
           </a-tree>
         </a-col>
@@ -38,21 +40,10 @@ export default defineComponent({
     const documents = ref()
 
     const html = ref()
+    const defaultSelectedKeys = ref()
+    defaultSelectedKeys.value = []
     const doc = ref()
     doc.value = {}
-
-    const columns = [
-      {
-        title: "名称",
-        dataIndex: "name",
-        slots: { customRender: "name" }
-      },
-      {
-        title: "Action",
-        key: "action",
-        slots: { customRender: "action" }
-      }
-    ]
 
     const handleQuery = () => {
       // tree.value = []
@@ -63,6 +54,11 @@ export default defineComponent({
         if (result.success) {
           documents.value = result.data
           tree.value = ObjectUtils.arrayToTree(documents.value, 0)
+
+          if (ObjectUtils.isNotEmpty(tree.value)) {
+            defaultSelectedKeys.value = [tree.value[0].id]
+            handleQueryContent(tree.value[0].id)
+          }
         } else {
           message.error(result.msg)
         }
@@ -96,7 +92,8 @@ export default defineComponent({
       tree,
       html,
       handleQuery,
-      onSelect
+      onSelect,
+      defaultSelectedKeys
     }
   }
 });
