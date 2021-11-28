@@ -33,6 +33,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = RestException.class)
+    @ResponseBody
     public RestResponse restExceptionHandler(RestException ex) {
         return RestResponse.error(ex.getResponseStatus());
     }

@@ -55,6 +55,7 @@
 <!--        <table tableName="book" />-->
 <!--        <table tableName="category" />-->
 <!--        <table tableName="document" />-->
-        <table tableName="content" />
+<!--        <table tableName="content" />-->
+        <table tableName="user" />
     </context>
 </generatorConfiguration>
