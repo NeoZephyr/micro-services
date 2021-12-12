@@ -68,6 +68,19 @@
       </a-form-item>
     </a-form>
   </a-modal>
+
+  <a-modal
+      title="重置密码"
+      v-model:visible="resetPasswordVisible"
+      :confirm-loading="resetPasswordLoading"
+      @ok="handleResetPasswordOk(user.name)"
+  >
+    <a-form :model="user" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+      <a-form-item label="新密码">
+        <a-input v-model:value="user.password"/>
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <style scoped>
@@ -99,6 +112,9 @@ export default defineComponent({
     const user = ref()
     const editorVisible = ref(false)
     const editorLoading = ref(false)
+
+    const resetPasswordVisible = ref(false)
+    const resetPasswordLoading = ref(false)
 
     const columns = [
       {
@@ -190,7 +206,7 @@ export default defineComponent({
       }
     }
 
-    const handleDelete = (name: number) => {
+    const handleDelete = (name: string) => {
       axios.delete("/users/" + name).then((response) => {
         const data: any = response.data
 
@@ -215,6 +231,31 @@ export default defineComponent({
       user.value = {}
     }
 
+    const resetPassword = (record: any) => {
+      resetPasswordVisible.value = true
+      user.value = ObjectUtils.copy(record)
+      user.value.password = null
+    }
+
+    const handleResetPasswordOk = (name: string) => {
+      resetPasswordLoading.value = true
+
+      axios.put("/users/" + name + "/reset-password", user.value).then((response) => {
+        resetPasswordLoading.value = false
+        const data: any = response.data
+
+        if (data.success) {
+          resetPasswordVisible.value = false;
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          })
+        } else {
+          message.error(data.msg);
+        }
+      })
+    }
+
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -236,7 +277,12 @@ export default defineComponent({
       add,
       handleQuery,
       handleDelete,
-      handleEditorOk
+      handleEditorOk,
+
+      resetPasswordVisible,
+      resetPasswordLoading,
+      resetPassword,
+      handleResetPasswordOk
     }
   }
 });

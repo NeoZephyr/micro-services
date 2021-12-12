@@ -4,23 +4,25 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pain.blue.exception.RestException;
 import com.pain.blue.id.IdGenerator;
+import com.pain.blue.json.JsonUtils;
 import com.pain.blue.mapping.CopyUtils;
 import com.pain.blue.rest.response.PageResult;
 import com.pain.blue.wiki.domain.dto.UserDTO;
+import com.pain.blue.wiki.domain.dto.UserLoginDTO;
 import com.pain.blue.wiki.domain.pojo.User;
 import com.pain.blue.wiki.domain.pojo.UserExample;
 import com.pain.blue.wiki.mapper.UserMapper;
-import com.pain.blue.wiki.request.user.UserIndexRequest;
-import com.pain.blue.wiki.request.user.UserSaveRequest;
-import com.pain.blue.wiki.request.user.UserUpdateRequest;
+import com.pain.blue.wiki.request.user.*;
 import com.pain.blue.wiki.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class UserService {
 
     private final UserMapper userMapper;
     private final IdGenerator idGenerator;
+    private final RedisTemplate redisTemplate;
 
     public PageResult<UserDTO> index(UserIndexRequest query) {
         UserExample example = new UserExample();
@@ -79,6 +82,37 @@ public class UserService {
         if (user != null) {
             userMapper.deleteByPrimaryKey(user.getId());
         }
+    }
+
+    public void resetPassword(String name, UserRestPasswordRequest restPasswordRequest) {
+        User user = selectByName(name);
+
+        if (user == null) {
+            throw new RestException(ResponseUtil.USER_NOT_EXIST);
+        }
+
+        User updateUser = CopyUtils.copy(restPasswordRequest, User.class);
+        updateUser.setId(user.getId());
+        userMapper.updateByPrimaryKeySelective(updateUser);
+    }
+
+    public UserLoginDTO login(UserLoginRequest loginRequest) {
+        User user = selectByName(loginRequest.getName());
+
+        if (user == null) {
+            throw new RestException(ResponseUtil.USER_LOGIN_FAILED);
+        }
+
+        if (!StringUtils.equals(user.getPassword(), loginRequest.getPassword())) {
+            throw new RestException(ResponseUtil.USER_LOGIN_FAILED);
+        }
+
+        UserLoginDTO loginDTO = CopyUtils.copy(user, UserLoginDTO.class);
+        long token = idGenerator.gen();
+        loginDTO.setToken(String.valueOf(token));
+        redisTemplate.opsForValue().set(loginDTO.getToken(), JsonUtils.objToStr(loginDTO), 30 * 60, TimeUnit.SECONDS);
+
+        return loginDTO;
     }
 
     private User selectByName(String name) {

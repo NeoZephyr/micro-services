@@ -3,9 +3,8 @@ package com.pain.blue.wiki.controller;
 import com.pain.blue.rest.response.PageResult;
 import com.pain.blue.rest.response.RestResponse;
 import com.pain.blue.wiki.domain.dto.UserDTO;
-import com.pain.blue.wiki.request.user.UserIndexRequest;
-import com.pain.blue.wiki.request.user.UserSaveRequest;
-import com.pain.blue.wiki.request.user.UserUpdateRequest;
+import com.pain.blue.wiki.domain.dto.UserLoginDTO;
+import com.pain.blue.wiki.request.user.*;
 import com.pain.blue.wiki.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +40,17 @@ public class UserController {
     public RestResponse delete(@PathVariable String name) {
         userService.delete(name);
         return RestResponse.success();
+    }
+
+    @PutMapping("/{name}/reset-password")
+    public RestResponse resetPassword(@PathVariable String name, @RequestBody UserRestPasswordRequest restPasswordRequest) {
+        userService.resetPassword(name, restPasswordRequest);
+        return RestResponse.success();
+    }
+
+    @PostMapping("/login")
+    public RestResponse login(@RequestBody UserLoginRequest loginRequest) {
+        UserLoginDTO loginDTO = userService.login(loginRequest);
+        return RestResponse.success(loginDTO);
     }
 }
